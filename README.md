@@ -1,5 +1,3 @@
-
-
 # $${\color{green}WAREHOUSE \space MANAGEMENT \space PROJECT }$$
 
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
@@ -13,13 +11,7 @@
 --><!----  ---->
 
 <hr>
-
-| MSSV | Name | Class | 
-| :------ | :------: |------:| 
-| 2001215896 | Lê Gia Kiệt | Leader | 
-| 2001216089 | Lê Đình Qúy | Member | 
-| 2001215931 | Trần Văn Lộc | Member |
-
+  
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -69,7 +61,14 @@
   </ol>
 </details>
 
+## Member
 
+
+| MSSV | Name | Class | 
+| :------- | :------: |------:| 
+| 2001215896 | Lê Gia Kiệt | Leader | 
+| 2001216089 | Lê Đình Qúy | Member | 
+| 2001215931 | Trần Văn Lộc | Member |
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
@@ -109,7 +108,7 @@ This section should list any major frameworks/libraries used to bootstrap your p
 # Functionality
 
 
-<table>
+<table align="center">
   <tr>
     <th>STT</th>
     <th>Chức Năng</th>
