@@ -87,6 +87,21 @@
   </tr>
   <tr>
     <td>12</td>
+  <hr>
+    <div class="container">
+        <h1 class="title">Giới thiệu ứng dụng quản lý kho</h1>
+        <p class="description">Ứng dụng quản lý kho là một phần mềm được thiết kế để tối ưu hóa các hoạt động liên quan đến việc lưu trữ và quản lý hàng hóa trong một kho hàng. Phần mềm này giúp các doanh nghiệp theo dõi hàng tồn kho, quản lý nhập xuất hàng, kiểm soát chất lượng và nâng cao hiệu quả hoạt động của kho.</p>
+
+        <h2>Mục tiêu của dự án</h2>
+        <ul class="list">
+            <li>Thay thế phương pháp thủ công: Giảm thiểu sai sót, tăng tốc độ xử lý thông tin.</li>
+            <li>Tăng độ chính xác: Đảm bảo thông tin về hàng hóa luôn được cập nhật và chính xác.</li>
+            <li>Tối ưu hóa không gian: Sắp xếp hàng hóa hợp lý, giảm thiểu lãng phí diện tích.</li>
+            <li>Nâng cao hiệu quả làm việc: Tự động hóa các công việc lặp đi lặp lại, giảm bớt gánh nặng cho nhân viên.</li>
+            <li>Cải thiện dịch vụ khách hàng: Đáp ứng nhanh chóng các yêu cầu về thông tiêu hàng hóa, đơn hàng.</li>
+            <li>Tích hợp với các hệ thống khác: Kết nối với hệ thống kế toán, bán hàng để tạo ra một quy trình làm việc liền mạch.</li>
+        </ul>
+    </div>
     <td>Xuất báo cáo xuất nhập, xuất</td>
     <td></td>
   </tr>
