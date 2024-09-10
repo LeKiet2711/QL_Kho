@@ -87,7 +87,11 @@
   </tr>
   <tr>
     <td>12</td>
-  <hr>
+    <td>Xuất báo cáo xuất nhập, xuất</td>
+    <td></td>
+  </tr>
+</table>
+<hr>
     <div class="container">
         <h1 class="title">Giới thiệu ứng dụng quản lý kho</h1>
         <p class="description">Ứng dụng quản lý kho là một phần mềm được thiết kế để tối ưu hóa các hoạt động liên quan đến việc lưu trữ và quản lý hàng hóa trong một kho hàng. Phần mềm này giúp các doanh nghiệp theo dõi hàng tồn kho, quản lý nhập xuất hàng, kiểm soát chất lượng và nâng cao hiệu quả hoạt động của kho.</p>
@@ -102,7 +106,3 @@
             <li>Tích hợp với các hệ thống khác: Kết nối với hệ thống kế toán, bán hàng để tạo ra một quy trình làm việc liền mạch.</li>
         </ul>
     </div>
-    <td>Xuất báo cáo xuất nhập, xuất</td>
-    <td></td>
-  </tr>
-</table>
