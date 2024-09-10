@@ -27,7 +27,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    
   </a>
 
   <p align="center">
@@ -82,6 +82,15 @@
 <hr>
         <h1>Giới thiệu ứng dụng quản lý kho</h1>
         <p>Ứng dụng quản lý kho là một phần mềm được thiết kế để tối ưu hóa các hoạt động liên quan đến việc lưu trữ và quản lý hàng hóa trong một kho hàng. Phần mềm này giúp các doanh nghiệp theo dõi hàng tồn kho, quản lý nhập xuất hàng, kiểm soát chất lượng và nâng cao hiệu quả hoạt động của kho.</p>
+<h2>Mục tiêu của dự án</h2>
+        <ul>
+            <li>Thay thế phương pháp thủ công: Giảm thiểu sai sót, tăng tốc độ xử lý thông tin.</li>
+            <li>Tăng độ chính xác: Đảm bảo thông tin về hàng hóa luôn được cập nhật và chính xác.</li>
+            <li>Tối ưu hóa không gian: Sắp xếp hàng hóa hợp lý, giảm thiểu lãng phí diện tích.</li>
+            <li>Nâng cao hiệu quả làm việc: Tự động hóa các công việc lặp đi lặp lại, giảm bớt gánh nặng cho nhân viên.</li>
+            <li>Cải thiện dịch vụ khách hàng: Đáp ứng nhanh chóng các yêu cầu về thông tiêu hàng hóa, đơn hàng.</li>
+            <li>Tích hợp với các hệ thống khác: Kết nối với hệ thống kế toán, bán hàng để tạo ra một quy trình làm việc liền mạch.</li>
+        </ul>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -93,6 +102,7 @@ This section should list any major frameworks/libraries used to bootstrap your p
 
 * [![Bootstrap][Bootstrap.com]][Bootstrap-url]
 * [![JQuery][JQuery.com]][JQuery-url]
+* [![C#][Blazor.com]][Blazor-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -173,76 +183,7 @@ This section should list any major frameworks/libraries used to bootstrap your p
 This is an example of how you may give instructions on setting up your project locally.
 To get a local copy up and running follow these simple example steps.
 
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
-
 ### Installation
-
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/github_username/repo_name.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
-5. Change git remote url to avoid accidental pushes to base project
-   ```sh
-   git remote set-url origin github_username/repo_name
-   git remote -v # confirm the changes
-   ```
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<h2>Mục tiêu của dự án</h2>
-        <ul>
-            <li>Thay thế phương pháp thủ công: Giảm thiểu sai sót, tăng tốc độ xử lý thông tin.</li>
-            <li>Tăng độ chính xác: Đảm bảo thông tin về hàng hóa luôn được cập nhật và chính xác.</li>
-            <li>Tối ưu hóa không gian: Sắp xếp hàng hóa hợp lý, giảm thiểu lãng phí diện tích.</li>
-            <li>Nâng cao hiệu quả làm việc: Tự động hóa các công việc lặp đi lặp lại, giảm bớt gánh nặng cho nhân viên.</li>
-            <li>Cải thiện dịch vụ khách hàng: Đáp ứng nhanh chóng các yêu cầu về thông tiêu hàng hóa, đơn hàng.</li>
-            <li>Tích hợp với các hệ thống khác: Kết nối với hệ thống kế toán, bán hàng để tạo ra một quy trình làm việc liền mạch.</li>
-        </ul>
-
-<!-- ROADMAP -->
-## Roadmap
-
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-    - [ ] Chinese
-    - [ ] Spanish
-
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -257,26 +198,6 @@ Don't forget to give the project a star! Thanks again!
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- CONTACT -->
-## Contact
-
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
-
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- ACKNOWLEDGMENTS -->
