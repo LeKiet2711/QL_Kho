@@ -20,3 +20,74 @@
     <td>Thành viên</td>
   </tr>
 </table>
+
+
+<h2>Các Chức Năng Của Dự Án</h2>
+
+<table>
+  <tr>
+    <th>STT</th>
+    <th>Chức Năng</th>
+    <th></th>
+  </tr
+  <tr>
+    <td>1</td>
+    <td>Đăng nhập/Đăng kí</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Danh mục đơn vị tính</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>Danh mục sản phẩm</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>Danh mục kho</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>Phân quyền kho</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>Phiếu nhập</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>Chi tiết phiếu nhập</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>Phiếu xuất</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>Chi tiết phiếu xuất</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>Báo cáo chi tiết hàng nhập, hàng xuất (dựa vào khung thời gian)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td>Báo cáo xuất nhập tồn (dựa vào khung thời gian)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>12</td>
+    <td>Xuất báo cáo xuất nhập, xuất</td>
+    <td></td>
+  </tr>
+</table>
