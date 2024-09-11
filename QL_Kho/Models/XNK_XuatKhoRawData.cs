@@ -14,25 +14,25 @@ public partial class XNK_XuatKhoRawData
     public int AutoId { get; set; }
 
     [Column("Xuat_Kho_ID")]
-    public int? XuatKhoId { get; set; }
+    public int XuatKhoId { get; set; }
 
     [Column("San_Pham_ID")]
-    public int? SanPhamId { get; set; }
+    public int SanPhamId { get; set; }
 
     [Column("SL_Xuat", TypeName = "decimal(18, 2)")]
-    public decimal? SlXuat { get; set; }
+    public decimal SlXuat { get; set; }
 
     [Column("Don_Gia_Xuat", TypeName = "decimal(18, 2)")]
-    public decimal? DonGiaXuat { get; set; }
+    public decimal DonGiaXuat { get; set; }
 
     [Column("isDeleted")]
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     [ForeignKey("SanPhamId")]
     [InverseProperty("TblXnkXuatKhoRawData")]
-    public virtual DanhMucSanPham? SanPham { get; set; }
+    public virtual DanhMucSanPham SanPham { get; set; }
 
     [ForeignKey("XuatKhoId")]
     [InverseProperty("TblXnkXuatKhoRawData")]
-    public virtual XNK_XuatKho? XuatKho { get; set; }
+    public virtual XNK_XuatKho XuatKho { get; set; }
 }

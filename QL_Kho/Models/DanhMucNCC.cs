@@ -15,17 +15,19 @@ public partial class DanhMucNCC
 
     [Column("Ma_NCC")]
     [StringLength(100)]
-    public string? MaNcc { get; set; }
+    [Required(ErrorMessage = "Vui lòng không để trống mã nhà cung cấp")]
+    public string MaNcc { get; set; }
 
     [Column("Ten_NCC")]
     [StringLength(100)]
-    public string? TenNcc { get; set; }
+    [Required(ErrorMessage = "Vui lòng không để trống tên nhà cung cấp")]
+    public string TenNcc { get; set; }
 
     [StringLength(255)]
     public string? GhiChu { get; set; }
 
     [Column("isDeleted")]
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     [InverseProperty("Ncc")]
     public virtual ICollection<XNK_NhapKho> TblXnkNhapKhos { get; set; } = new List<XNK_NhapKho>();

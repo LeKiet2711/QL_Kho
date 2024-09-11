@@ -15,17 +15,19 @@ public partial class DanhMucLoaiSanPham
 
     [Column("Ma_LSP")]
     [StringLength(100)]
-    public string? MaLsp { get; set; }
+    [Required(ErrorMessage ="Vui lòng không để trống mã loại sản phẩm")]
+    public string MaLsp { get; set; }
 
     [Column("Ten_LSP")]
     [StringLength(100)]
-    public string? TenLsp { get; set; }
+    [Required(ErrorMessage = "Vui lòng không để trống tên loại sản phẩm")]
+    public string TenLsp { get; set; }
 
     [StringLength(255)]
     public string? GhiChu { get; set; }
 
     [Column("isDeleted")]
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     [InverseProperty("LoaiSanPham")]
     public virtual ICollection<DanhMucSanPham> TblDmSanPhams { get; set; } = new List<DanhMucSanPham>();

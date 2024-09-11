@@ -15,23 +15,26 @@ public partial class XNK_XuatKho
 
     [Column("So_Phieu_Xuat")]
     [StringLength(100)]
-    public string? SoPhieuXuat { get; set; }
+    [Required(ErrorMessage = "Vui lòng nhập số phiếu xuất")]
+    public string SoPhieuXuat { get; set; }
 
     [Column("Kho_ID")]
-    public int? KhoId { get; set; }
+    [Required(ErrorMessage = "Vui lòng chọn kho")]
+    public int KhoId { get; set; }
 
     [Column("Ngay_Xuat_Kho")]
-    public DateOnly? NgayXuatKho { get; set; }
+    [Required(ErrorMessage = "Vui lòng không để trống ngày xuất")]
+    public DateOnly NgayXuatKho { get; set; }
 
     [StringLength(255)]
     public string? GhiChu { get; set; }
 
     [Column("isDeleted")]
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     [ForeignKey("KhoId")]
     [InverseProperty("TblXnkXuatKhos")]
-    public virtual DanhMucKho? Kho { get; set; }
+    public virtual DanhMucKho Kho { get; set; }
 
     [InverseProperty("XuatKho")]
     public virtual ICollection<XNK_XuatKhoRawData> TblXnkXuatKhoRawData { get; set; } = new List<XNK_XuatKhoRawData>();

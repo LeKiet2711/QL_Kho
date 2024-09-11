@@ -15,17 +15,19 @@ public partial class DanhMucDonViTinh
 
     [Column("Ma_DVT")]
     [StringLength(100)]
-    public string? MaDvt { get; set; }
+    [Required(ErrorMessage ="Vui lòng không để trống mã đơn vị tính")]
+    public string MaDvt { get; set; }
 
     [Column("Ten_DVT")]
     [StringLength(100)]
-    public string? TenDvt { get; set; }
+    [Required(ErrorMessage = "Vui lòng không để trống tên đơn vị tính")]
+    public string TenDvt { get; set; }
 
     [StringLength(255)]
     public string? GhiChu { get; set; }
 
     [Column("isDeleted")]
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     [InverseProperty("DonViTinh")]
     public virtual ICollection<DanhMucSanPham> TblDmSanPhams { get; set; } = new List<DanhMucSanPham>();

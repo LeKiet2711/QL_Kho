@@ -15,17 +15,19 @@ public partial class DanhMucKho
 
     [Column("Ma_Kho")]
     [StringLength(100)]
-    public string? MaKho { get; set; }
+    [Required(ErrorMessage ="Vui lòng không để trống mã kho")]
+    public string MaKho { get; set; }
 
     [Column("Ten_Kho")]
     [StringLength(100)]
-    public string? TenKho { get; set; }
+    [Required(ErrorMessage = "Vui lòng không để trống tên kho")]
+    public string TenKho { get; set; }
 
     [StringLength(255)]
     public string? GhiChu { get; set; }
 
     [Column("isDeleted")]
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     [InverseProperty("Kho")]
     public virtual ICollection<XNK_NhapKho> TblXnkNhapKhos { get; set; } = new List<XNK_NhapKho>();

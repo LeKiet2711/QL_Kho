@@ -15,21 +15,25 @@ public partial class DanhMucSanPham
 
     [Column("Ma_San_Pham")]
     [StringLength(100)]
-    public string? MaSanPham { get; set; }
+    [Required(ErrorMessage = "Vui lòng không để trống mã sản phẩm")]
+    public string MaSanPham { get; set; }
 
     [Column("Ten_San_Pham")]
     [StringLength(100)]
-    public string? TenSanPham { get; set; }
+    [Required(ErrorMessage = "Vui lòng không để trống tên sản phẩm")]
+    public string TenSanPham { get; set; }
 
-    public int? LoaiSanPhamId { get; set; }
+    [Required(ErrorMessage = "Vui lòng chọn loại sản phẩm")]
+    public int LoaiSanPhamId { get; set; }
 
-    public int? DonViTinhId { get; set; }
+    [Required(ErrorMessage = "Vui lòng chọn đơn vị tính")]
+    public int DonViTinhId { get; set; }
 
     [StringLength(255)]
     public string? GhiChu { get; set; }
 
     [Column("isDeleted")]
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     [ForeignKey("DonViTinhId")]
     [InverseProperty("TblDmSanPhams")]

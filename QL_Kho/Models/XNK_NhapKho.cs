@@ -15,30 +15,34 @@ public partial class XNK_NhapKho
 
     [Column("So_Phieu_Nhap")]
     [StringLength(100)]
-    public string? SoPhieuNhap { get; set; }
+    [Required(ErrorMessage = "Vui lòng không để trống số phiếu nhập")]
+    public string SoPhieuNhap { get; set; }
 
     [Column("Kho_ID")]
-    public int? KhoId { get; set; }
+    [Required(ErrorMessage = "Vui lòng chọn kho")]
+    public int KhoId { get; set; }
 
     [Column("NCC_ID")]
-    public int? NccId { get; set; }
+    [Required(ErrorMessage = "Vui lòng chọn nhà cung cấp")]
+    public int NccId { get; set; }
 
     [Column("Ngay_Nhap_Kho")]
-    public DateOnly? NgayNhapKho { get; set; }
+    [Required(ErrorMessage = "Vui lòng không để trống ngày nhập")]
+    public DateOnly NgayNhapKho { get; set; }
 
     [StringLength(255)]
     public string? GhiChu { get; set; }
 
     [Column("isDeleted")]
-    public bool? IsDeleted { get; set; }
+    public bool IsDeleted { get; set; }
 
     [ForeignKey("KhoId")]
     [InverseProperty("TblXnkNhapKhos")]
-    public virtual DanhMucKho? Kho { get; set; }
+    public virtual DanhMucKho Kho { get; set; }
 
     [ForeignKey("NccId")]
     [InverseProperty("TblXnkNhapKhos")]
-    public virtual DanhMucNCC? Ncc { get; set; }
+    public virtual DanhMucNCC Ncc { get; set; }
 
     [InverseProperty("NhapKho")]
     public virtual ICollection<XNK_NhapKhoRawData> TblXnkNhapKhoRawData { get; set; } = new List<XNK_NhapKhoRawData>();

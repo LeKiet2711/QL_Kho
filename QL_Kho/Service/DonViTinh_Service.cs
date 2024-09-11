@@ -12,7 +12,9 @@ namespace QL_Kho.Service
         }
         public async Task<List<DanhMucDonViTinh>> GetDanhMucDonViTinh()
         {
-            return await _dbconnect.DanhMucDonViTinh.ToListAsync();
+            return await _dbconnect.DanhMucDonViTinh
+                           .Where(dvt => dvt.IsDeleted==false) // Lọc các bản ghi chưa bị xóa
+                           .ToListAsync();
         }
 
         public async Task<bool> AddDanhMucDonViTinh(DanhMucDonViTinh danhmucdonvitinh)
@@ -49,29 +51,32 @@ namespace QL_Kho.Service
         public async Task<bool> UpdateDanhMucDonViTinh(DanhMucDonViTinh danhmucdonvitinh)
         {
             var existingEntity = await _dbconnect.DanhMucDonViTinh
-                .FirstOrDefaultAsync(x => x.MaDvt == danhmucdonvitinh.MaDvt);
+        .FirstOrDefaultAsync(x => x.MaDvt == danhmucdonvitinh.MaDvt && x.IsDeleted == false);
+
             if (existingEntity != null)
             {
                 existingEntity.TenDvt = danhmucdonvitinh.TenDvt;
                 existingEntity.GhiChu = danhmucdonvitinh.GhiChu;
+
                 await _dbconnect.SaveChangesAsync();
                 return true;
             }
-            return false; // Không tìm thấy bản ghi để cập nhật
+            return false;
         }
 
 
         public async Task<bool> DeleteDanhMucDonViTinh(DanhMucDonViTinh danhmucdonvitinh)
         {
             var existingEntity = await _dbconnect.DanhMucDonViTinh
-                .FirstOrDefaultAsync(x => x.MaDvt == danhmucdonvitinh.MaDvt);
+        .FirstOrDefaultAsync(x => x.MaDvt == danhmucdonvitinh.MaDvt && x.IsDeleted==false);
+
             if (existingEntity != null)
             {
-                _dbconnect.DanhMucDonViTinh.Remove(existingEntity);
+                existingEntity.IsDeleted = true; // Đánh dấu là đã xóa
                 await _dbconnect.SaveChangesAsync();
                 return true;
             }
-            return false; // Không tìm thấy bản ghi để xóa
+            return false;
         }
 
 
