@@ -1,0 +1,329 @@
+﻿@page "/danhmucdonvitinh"
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+@inject DonViTinh_Service donViTinh_Service
+@inject IToastService ToastService
+
+<h2 style="text-align:center;font-weight:bold">Danh mục đơn vị tính</h2>
+<button class="btn btn-success" @onclick="OpenAddModal" style="margin-bottom:10px">
+    <span class="oi oi-plus" aria-hidden="true">Thêm đơn vị tính mới</span>
+</button>
+
+@if (dataList == null)
+{
+    <p>Đang tải dữ liệu...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Mã đơn vị tính</th>
+                <th>Tên Đơn Vị Tính</th>
+                <th>Ghi Chú</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in dataList)
+            {
+                <tr>
+                    <td>@item.MaDvt</td>
+                    <td>@item.TenDvt</td>
+                    <td>@item.GhiChu</td>
+                    <td>
+                        <button class="btn btn-warning" @onclick="() => OpenEditModal(item)">
+                            <span class="oi oi-pencil" aria-hidden="true">Sửa</span>
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger" @onclick="() => OpenDeleteModal(item)">
+                            <span class="oi oi-trash" aria-hidden="true">Xóa</span>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+<div class="modal fade @addModalClass" tabindex="-1" role="dialog" style="@addModalDisplayStyle">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#2f8f3a; color:beige">
+                <h5 class="modal-title"><b>Thêm mới đơn vị tính</b></h5>
+                <button type="button" class="close" @onclick="CloseAddModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background:#e5d2b8; color:brown">
+                <EditForm Model="@donViTinh" OnValidSubmit="createDonViTinh">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <label for="MaDonViTinh" class="control-label"><b>Mã đơn vị tính: </b></label>
+                        <InputText class="form-control" @bind-Value=@donViTinh.MaDvt />
+                        <ValidationMessage For="@(() => donViTinh.MaDvt)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="TenDonViTinh" class="control-label"><b>Tên đơn vị tính: </b></label>
+                        <InputText class="form-control" @bind-Value=@donViTinh.TenDvt />
+                        <ValidationMessage For="@(() => donViTinh.TenDvt)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="GhiChu" class="control-label"><b>Ghi chú: </b></label>
+                        <InputText class="form-control" @bind-Value=@donViTinh.GhiChu />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Thêm đơn vị tính</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseAddModal">Đóng</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade @editModalClass" tabindex="-1" role="dialog" style="@editModalDisplayStyle">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#2f8f3a; color:beige">
+                <h5 class="modal-title"><b>Cập nhật khu vực trồng</b></h5>
+                <button type="button" class="close" @onclick="CloseEditModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background:#e5d2b8; color:brown">
+                <EditForm Model="@donViTinh" OnValidSubmit="updateDonViTinh">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <label for="MaDonViTinh" class="control-label"><b>Mã đơn vị tính: </b></label>
+                        <InputText class="form-control" @bind-Value=@donViTinh.MaDvt />
+                        <ValidationMessage For="@(() => donViTinh.MaDvt)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="TenDonViTinh" class="control-label"><b>Tên đơn vị tính: </b></label>
+                        <InputText class="form-control" @bind-Value=@donViTinh.TenDvt />
+                        <ValidationMessage For="@(() => donViTinh.TenDvt)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="GhiChu" class="control-label"><b>Ghi chú: </b></label>
+                        <InputText class="form-control" @bind-Value=@donViTinh.GhiChu />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Cập nhật đơn vị tính</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseEditModal">Đóng</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade @deleteModalClass" tabindex="-1" role="dialog" style="@deleteModalDisplayStyle">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#2f8f3a; color:beige">
+                <h5 class="modal-title"><b>Xóa khu vực trồng</b></h5>
+                <button type="button" class="close" @onclick="CloseDeleteModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background:#e5d2b8; color:brown; font-size:30px">
+                <p style="color:red">Bạn có chắc chắn muốn xóa khu vực này không?</p>
+                <EditForm Model="@donViTinh" OnValidSubmit="deleteDonViTinh">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <label for="MaDonViTinh" class="control-label">Mã đơn vị tính: </label>
+                        <label><b>@donViTinh.MaDvt</b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="TenDonViTinh" class="control-label">Tên đơn vị tính: </label>
+                        <label><b>@donViTinh.TenDvt</b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="GhiChu" class="control-label">Ghi chú: </label>
+                        <label><b>@donViTinh.GhiChu</b></label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Xóa khu vực trồng</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseDeleteModal">Đóng</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private List<DanhMucDonViTinh> dataList = new List<DanhMucDonViTinh>();
+    private DanhMucDonViTinh donViTinh = new DanhMucDonViTinh();
+    private bool holdten = false;
+    private bool holdma = false;
+
+    private string addModalClass = "";
+    private string addModalDisplayStyle = "display:none";
+    private string editModalClass = "";
+    private string editModalDisplayStyle = "display:none";
+    private string deleteModalClass = "";
+    private string deleteModalDisplayStyle = "display:none";
+
+    private string maDonVi;
+    private string tenDonVi;
+
+    protected override async Task OnInitializedAsync()
+    {
+        dataList = await donViTinh_Service.GetDanhMucDonViTinh();
+    }
+
+    private void OpenAddModal()
+    {
+        donViTinh = new DanhMucDonViTinh();
+        addModalClass = "show";
+        addModalDisplayStyle = "display:block";
+    }
+
+    private void CloseAddModal()
+    {
+        addModalClass = "";
+        addModalDisplayStyle = "display:none";
+        holdten = false;
+        holdma = false;
+        StateHasChanged();
+    }
+
+    private void OpenEditModal(DanhMucDonViTinh item)
+    {
+        donViTinh = new DanhMucDonViTinh
+            {
+                MaDvt = item.MaDvt,
+                TenDvt = item.TenDvt,
+                GhiChu = item.GhiChu
+            };
+        maDonVi = item.MaDvt;
+        tenDonVi = item.TenDvt;
+        editModalClass = "show";
+        editModalDisplayStyle = "display:block";
+    }
+
+    private void CloseEditModal()
+    {
+        editModalClass = "";
+        editModalDisplayStyle = "display:none";
+        holdten = false;
+        holdma = false;
+        StateHasChanged();
+    }
+
+    private void OpenDeleteModal(DanhMucDonViTinh item)
+    {
+        donViTinh = new DanhMucDonViTinh
+            {
+                MaDvt = item.MaDvt,
+                TenDvt = item.TenDvt,
+                GhiChu = item.GhiChu
+            };
+        deleteModalClass = "show";
+        deleteModalDisplayStyle = "display:block";
+    }
+
+    private void CloseDeleteModal()
+    {
+        deleteModalClass = "";
+        deleteModalDisplayStyle = "display:none";
+        holdten = false;
+        holdma = false;
+        StateHasChanged();
+    }
+
+    private async Task createDonViTinh()
+    {
+        if (await donViTinh_Service.IsMADVTExists(donViTinh.MaDvt,"SQLSERVER"))
+        {
+            holdma = true;
+            StateHasChanged();
+            return;
+        }
+        if (await donViTinh_Service.IsTenDVTExists(donViTinh.TenDvt,"SQLSERVER"))
+        {
+            holdten = true;
+            StateHasChanged();
+            return;
+        }
+        if (await donViTinh_Service.AddDanhMucDonViTinh(donViTinh))
+        {
+            ToastService.ShowSuccess("Thêm đơn vị tính thành công.");
+            CloseAddModal();
+        }
+        else
+        {
+            ToastService.ShowError("Có lỗi xảy ra.");
+        }
+        dataList = await donViTinh_Service.GetDanhMucDonViTinh();
+        StateHasChanged();
+    }
+
+    private async Task updateDonViTinh()
+    {
+        if (maDonVi != donViTinh.MaDvt && await donViTinh_Service.IsMADVTExists(donViTinh.MaDvt,"SQL"))
+        {
+            holdma = true;
+            StateHasChanged();
+            return;
+        }
+        if (tenDonVi != donViTinh.TenDvt && await donViTinh_Service.IsTenDVTExists(donViTinh.TenDvt,"SQL"))
+        {
+            holdten = true;
+            StateHasChanged();
+            return;
+        }
+        if (await donViTinh_Service.UpdateDanhMucDonViTinh(donViTinh))
+        {
+            ToastService.ShowSuccess("Cập nhật đơn vị tính thành công.");
+            CloseEditModal();
+        }
+        else
+        {
+            ToastService.ShowError("Có lỗi xảy ra.");
+        }
+        dataList = await donViTinh_Service.GetDanhMucDonViTinh();
+        StateHasChanged();
+    }
+
+    private async Task deleteDonViTinh()
+    {
+        if (await donViTinh_Service.DeleteDanhMucDonViTinh(donViTinh))
+        {
+            ToastService.ShowSuccess("Xóa đơn vị tính thành công.");
+            CloseDeleteModal();
+        }
+        else
+        {
+            ToastService.ShowError("Có lỗi xảy ra.");
+        }
+        dataList = await donViTinh_Service.GetDanhMucDonViTinh();
+        StateHasChanged();
+    }
+
+    // private void EditItem(GridCommandEventArgs e)
+    // {
+    //     if (e.CommandName == "Edit")
+    //     {
+    //         var item = (DonViTinh)e.Item;
+    //         OpenEditModal(item);
+    //     }
+    // }
+
+    // private void DeleteItem(GridCommandEventArgs e)
+    // {
+    //     if (e.CommandName == "Delete")
+    //     {
+    //         var item = (DonViTinh)e.Item;
+    //         OpenDeleteModal(item);
+    //     }
+    // }
+}
