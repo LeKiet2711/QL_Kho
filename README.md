@@ -1,4 +1,7 @@
-# $${\color{green}WAREHOUSE \space MANAGEMENT \space PROJECT }$$
+
+<p align="center" color="#36BCF7FF"><img src="https://readme-typing-svg.herokuapp.com?lines=WAREHOUSE+MANAGEMENT+PROJECT;WAREHOUSE+MANAGEMENT+PROJECT;WAREHOUSE+MANAGEMENT+PROJECT"></p>
+
+<img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
 
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a id="readme-top"></a>
@@ -9,8 +12,6 @@
 *** Don't forget to give the project a star!
 *** Thanks again! Now go create something AMAZING! :D
 --><!----  ---->
-
-<hr>
   
 <!-- PROJECT LOGO -->
 <br />
@@ -22,14 +23,10 @@
   <p align="center">
     Welcome to README introduce
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Khám phá tài liệu »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
-    ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
-    ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues/new?labels=enhancement&template=feature-request---.md">Request Feature</a>
+    <a href="https://github.com/othneildrew/Best-README-Template">Xem demo</a>
   </p>
 </div>
 
@@ -37,22 +34,27 @@
 
 <!-- TABLE OF CONTENTS -->
 <details>
-  <summary>Table of Contents</summary>
+  <summary>Phụ lục</summary>
   <ol>
     <li>
-      <a href="#about-the-project">About The Project</a>
+      <a href="#about-the-project">Tổng quan</a>
       <ul>
-        <li><a href="#built-with">Built With</a></li>
+        <li><a href="#built-with">Công nghệ sử dụng</a></li>
       </ul>
     </li>
     <li>
-      <a href="#getting-started">Getting Started</a>
+      <a href="#introduce">Gioi thieu</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#prerequisites">Điều kiện tiên quyết</a></li>
+        <li><a href="#installation">Cài đặt</a></li>
       </ul>
+      <a href="#member">Thành viên nhóm</a>
+      <a href="#feature">Tính năng</a>
+      <a href="#explain">Đặc tả tính năng</a>
+      <a href="#assigntask">Phân công công việc</a>
+      <a href="#ai" style="color: green">Ứng dụng AI</a>
     </li>
-    <li><a href="#usage">Usage</a></li>
+    <li><a href="#usage">Cách dùng</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -61,17 +63,10 @@
   </ol>
 </details>
 
-## Member
-
-
-| MSSV | Name | Class | 
-| :------- | :------: |------:| 
-| 2001215896 | Lê Gia Kiệt | Leader | 
-| 2001216089 | Lê Đình Qúy | Member | 
-| 2001215931 | Trần Văn Lộc | Member |
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+
+<h1 id="introduce">Gioi thieu</h1>
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
@@ -90,9 +85,33 @@
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+### <img src="https://media.giphy.com/media/cj87CxfRtrUifF3Ryk/giphy.gif" width="25px" height="20px"> Installation
 
 
-### Built With
+<!-- CONTRIBUTING -->
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+
+<h1 id="member">Thành viên nhóm</h1>
+
+| MSSV | Name | Class | 
+| :------- | :------: |------:| 
+| 2001215896 | Lê Gia Kiệt | Leader | 
+| 2001216089 | Lê Đình Qúy | Member | 
+| 2001215931 | Trần Văn Lộc | Member |
+
+<h2 id="build-with">Thành viên nhóm</h2>
 
 This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 
@@ -105,8 +124,8 @@ This section should list any major frameworks/libraries used to bootstrap your p
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-# Functionality
 
+<h1 id="feature">Chức năng</h1>
 
 <table align="center">
   <tr>
@@ -176,28 +195,9 @@ This section should list any major frameworks/libraries used to bootstrap your p
   </tr>
 </table>
 
-<!-- GETTING STARTED -->
-## Getting Started
+<h2 id="assigntask">Phân công công việc</h2>
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
-### Installation
-
-<!-- CONTRIBUTING -->
-## Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
+<h2 id="ai">Ứng dụng AI</h2>
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
