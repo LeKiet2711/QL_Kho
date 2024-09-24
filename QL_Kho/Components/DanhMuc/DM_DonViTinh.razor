@@ -26,7 +26,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in dataList)
+            @foreach (DanhMucDonViTinh item in dataList)
             {
                 <tr>
                     <td>@item.MaDvt</td>
@@ -200,6 +200,7 @@ else
     {
         donViTinh = new DanhMucDonViTinh
             {
+                AutoId = item.AutoId,    
                 MaDvt = item.MaDvt,
                 TenDvt = item.TenDvt,
                 GhiChu = item.GhiChu
@@ -223,6 +224,7 @@ else
     {
         donViTinh = new DanhMucDonViTinh
             {
+                AutoId = item.AutoId,
                 MaDvt = item.MaDvt,
                 TenDvt = item.TenDvt,
                 GhiChu = item.GhiChu
@@ -269,27 +271,33 @@ else
 
     private async Task updateDonViTinh()
     {
-        if (maDonVi != donViTinh.MaDvt && await donViTinh_Service.IsMADVTExists(donViTinh.MaDvt,"SQL"))
+        if (maDonVi != donViTinh.MaDvt && await donViTinh_Service.IsMADVTExists(donViTinh.MaDvt, "SQL"))
         {
             holdma = true;
             StateHasChanged();
             return;
         }
-        if (tenDonVi != donViTinh.TenDvt && await donViTinh_Service.IsTenDVTExists(donViTinh.TenDvt,"SQL"))
+        if (tenDonVi != donViTinh.TenDvt && await donViTinh_Service.IsTenDVTExists(donViTinh.TenDvt, "SQL"))
         {
             holdten = true;
             StateHasChanged();
             return;
         }
-        if (await donViTinh_Service.UpdateDanhMucDonViTinh(donViTinh))
-        {
-            ToastService.ShowSuccess("Cập nhật đơn vị tính thành công.");
-            CloseEditModal();
-        }
         else
         {
-            ToastService.ShowError("Có lỗi xảy ra.");
+            try
+            {
+                await donViTinh_Service.UpdateDanhMucDonViTinh(donViTinh);
+                ToastService.ShowSuccess("Cập nhật đơn vị tính thành công.");
+                CloseEditModal();
+            }
+            catch (Exception ex)
+            {
+                //throw ex;
+                ToastService.ShowError("Có lỗi xảy ra.");
+            }
         }
+        
         dataList = await donViTinh_Service.GetDanhMucDonViTinh();
         StateHasChanged();
     }

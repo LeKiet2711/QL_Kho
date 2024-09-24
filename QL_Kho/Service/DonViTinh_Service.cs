@@ -28,7 +28,7 @@ namespace QL_Kho.Service
         {
 
             var result = await (from dvt in _dbconnect.DanhMucDonViTinh
-                                where dvt.TenDvt == tenDVT && dvt.MaDvt != ID
+                                where dvt.TenDvt == tenDVT && dvt.MaDvt != ID && dvt.IsDeleted == false
                                 select dvt).AnyAsync();
             return result;
         }
@@ -37,24 +37,25 @@ namespace QL_Kho.Service
         {
 
             var result = await (from dvt in _dbconnect.DanhMucDonViTinh
-                                where dvt.MaDvt == maDVT && dvt.MaDvt != ID
+                                where dvt.MaDvt == maDVT && dvt.MaDvt != ID && dvt.IsDeleted == false
                                 select dvt).AnyAsync();
             return result;
         }
 
-        public async Task<DanhMucDonViTinh> GetDanhMucDonViTinhByID(string id)
+        public async Task<DanhMucDonViTinh> GetDanhMucDonViTinhByID(int id)
         {
-            DanhMucDonViTinh danhMucDonViTinh = await _dbconnect.DanhMucDonViTinh.FirstOrDefaultAsync(x => x.MaDvt == id);
+            DanhMucDonViTinh danhMucDonViTinh = await _dbconnect.DanhMucDonViTinh.FirstOrDefaultAsync(x => x.AutoId == id);
             return danhMucDonViTinh;
         }
 
         public async Task<bool> UpdateDanhMucDonViTinh(DanhMucDonViTinh danhmucdonvitinh)
         {
             var existingEntity = await _dbconnect.DanhMucDonViTinh
-        .FirstOrDefaultAsync(x => x.MaDvt == danhmucdonvitinh.MaDvt && x.IsDeleted == false);
+        .FirstOrDefaultAsync(x => x.AutoId == danhmucdonvitinh.AutoId && x.IsDeleted == false);
 
             if (existingEntity != null)
             {
+                existingEntity.MaDvt = danhmucdonvitinh.MaDvt;
                 existingEntity.TenDvt = danhmucdonvitinh.TenDvt;
                 existingEntity.GhiChu = danhmucdonvitinh.GhiChu;
 
@@ -64,11 +65,10 @@ namespace QL_Kho.Service
             return false;
         }
 
-
         public async Task<bool> DeleteDanhMucDonViTinh(DanhMucDonViTinh danhmucdonvitinh)
         {
             var existingEntity = await _dbconnect.DanhMucDonViTinh
-        .FirstOrDefaultAsync(x => x.MaDvt == danhmucdonvitinh.MaDvt && x.IsDeleted==false);
+        .FirstOrDefaultAsync(x => x.AutoId == danhmucdonvitinh.AutoId && x.IsDeleted==false);
 
             if (existingEntity != null)
             {
