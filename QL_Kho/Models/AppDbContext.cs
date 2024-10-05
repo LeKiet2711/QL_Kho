@@ -15,13 +15,23 @@ public partial class AppDbContext : DbContext
     {
     }
 
+    public virtual DbSet<DmManHinh> DmManHinhs { get; set; }
+
+    public virtual DbSet<QlNguoiDung> QlNguoiDungs { get; set; }
+
+    public virtual DbSet<QlNguoiDungNhomNguoiDung> QlNguoiDungNhomNguoiDungs { get; set; }
+
+    public virtual DbSet<QlNhomNguoiDung> QlNhomNguoiDungs { get; set; }
+
+    public virtual DbSet<QlPhanQuyen> QlPhanQuyens { get; set; }
+
     public virtual DbSet<DanhMucDonViTinh> DanhMucDonViTinh { get; set; }
 
     public virtual DbSet<DanhMucKho> DanhMucKho { get; set; }
 
     public virtual DbSet<DanhMucLoaiSanPham> DanhMucLoaiSanPham { get; set; }
 
-    public virtual DbSet<DanhMucNCC> DanhMucNCC{ get; set; }
+    public virtual DbSet<DanhMucNCC> DanhMucNCC { get; set; }
 
     public virtual DbSet<DanhMucSanPham> DanhMucSanPham { get; set; }
 
@@ -35,10 +45,37 @@ public partial class AppDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=MSI;Database=QL_Kho;User Id=sa;Password=123;Trust Server Certificate=True;");
+        => optionsBuilder.UseSqlServer("Server=KIETBANHTRAI\\SQLEXPRESS;Database=QL_Kho;User Id=sa;Password=123;Trust Server Certificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<DmManHinh>(entity =>
+        {
+            entity.HasKey(e => e.MaManHinh).HasName("PK__DM_ManHi__D84939226E911284");
+        });
+
+        modelBuilder.Entity<QlNguoiDung>(entity =>
+        {
+            entity.HasKey(e => e.TenDangNhap).HasName("PK__QL_Nguoi__55F68FC105E85A2F");
+
+            entity.Property(e => e.TrangThai).HasDefaultValue(0);
+        });
+
+        modelBuilder.Entity<QlNguoiDungNhomNguoiDung>(entity =>
+        {
+            entity.HasKey(e => new { e.TenDangNhap, e.MaNhomNguoiDung }).HasName("PK__QL_Nguoi__77F599D89FC2BC76");
+        });
+
+        modelBuilder.Entity<QlNhomNguoiDung>(entity =>
+        {
+            entity.HasKey(e => e.MaNhom).HasName("PK__QL_NhomN__234F91CD04A553B3");
+        });
+
+        modelBuilder.Entity<QlPhanQuyen>(entity =>
+        {
+            entity.Property(e => e.CoQuyen).HasDefaultValue(0);
+        });
+
         modelBuilder.Entity<DanhMucDonViTinh>(entity =>
         {
             entity.HasKey(e => e.AutoId).HasName("PK__tbl_DM_D__F82B88231A225EB6");
