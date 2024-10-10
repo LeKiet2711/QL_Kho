@@ -29,6 +29,8 @@ public partial class DanhMucNCC
     [Column("isDeleted")]
     public bool IsDeleted { get; set; }
 
+
+
     [InverseProperty("Ncc")]
     public virtual ICollection<XNK_NhapKho> TblXnkNhapKhos { get; set; } = new List<XNK_NhapKho>();
 }
