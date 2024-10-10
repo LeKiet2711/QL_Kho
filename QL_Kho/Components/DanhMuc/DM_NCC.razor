@@ -1,0 +1,478 @@
+﻿@page "/DanhMucNCC"
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+@inject NhaCungCap_Service nhaCungCap_Service
+@inject IToastService ToastService
+
+<h2 style="text-align:center;font-weight:bold">Danh mục nhà cung cấp</h2>
+<button class="btn btn-success" @onclick="OpenAddModal" style="margin-bottom:10px">
+    <span class="oi oi-plus" aria-hidden="true">Thêm nhà cung cấp mới</span>
+</button>
+
+@if (dataList == null)
+
+{
+    <p><em>Loading......</em></p>
+}
+
+else
+
+{
+    <TelerikGrid Data="@dataList" Pageable="true" Sortable="true" Height="calc(100vh - 170px)" Resizable="true" Reorderable="true" Class="telerik-grid">
+        <GridColumns>
+            <GridColumn Field="@nameof(DanhMucNCC.MaNcc)" Title="Mã nhà cung cấp" Width="100px" />
+            <GridColumn Field="@nameof(DanhMucNCC.TenNcc)" Title="Tên nhà cung cấp" Width="100px" />
+            <GridColumn Field="@nameof(DanhMucNCC.GhiChu)" Title="Ghi chú" Width="100px" />
+
+            <GridCommandColumn Width="180px">
+                <GridCommandButton Command="Edit" OnClick="@EditItem">
+                    <span class="oi oi-pencil" Width="100px"></span> Sửa
+                </GridCommandButton>
+                <GridCommandButton Command="Delete" OnClick="@DeleteItem">
+                    <span class="oi oi-trash" Width="100px"></span> Xóa
+                </GridCommandButton>
+            </GridCommandColumn>
+        </GridColumns>
+    </TelerikGrid>
+}
+
+
+<div class="modal fade @addModalClass" tabindex="-1" role="dialog" style="@addModalDisplayStyle">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#2f8f3a; color:beige">
+                <h5 class="modal-title"><b>Thêm mới nhà cung cấp</b></h5>
+                <button type="button" class="close" @onclick="CloseAddModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background:#e5d2b8; color:brown">
+                <EditForm Model="@nhaCungCap" OnValidSubmit="createNhaCungCap">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <label for="MaNhaCungCap" class="control-label"><b>Mã nhà cung cấp: </b></label>
+                        <InputText class="form-control" @bind-Value=@nhaCungCap.MaNcc />
+                        <ValidationMessage For="@(() => nhaCungCap.MaNcc)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="TenNhaCungCap" class="control-label"><b>Tên nhà cung cấp: </b></label>
+                        <InputText class="form-control" @bind-Value=@nhaCungCap.TenNcc />
+                        <ValidationMessage For="@(() => nhaCungCap.TenNcc)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="GhiChu" class="control-label"><b>Ghi chú: </b></label>
+                        <InputText class="form-control" @bind-Value=@nhaCungCap.GhiChu />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Thêm nhà cung cấp</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseAddModal">Đóng</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade @editModalClass" tabindex="-1" role="dialog" style="@editModalDisplayStyle">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#2f8f3a; color:beige">
+                <h5 class="modal-title"><b>Cập nhật nhà cung cấp</b></h5>
+                <button type="button" class="close" @onclick="CloseEditModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background:#e5d2b8; color:brown">
+                <EditForm Model="@nhaCungCap" OnValidSubmit="updateNhaCungCap">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <label for="MaNhaCungCap" class="control-label"><b>Mã nhà cung cấp: </b></label>
+                        <InputText class="form-control" @bind-Value=@nhaCungCap.MaNcc />
+                        <ValidationMessage For="@(() => nhaCungCap.MaNcc)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="TenNhaCungCap" class="control-label"><b>Tên nhà cung cấp: </b></label>
+                        <InputText class="form-control" @bind-Value=@nhaCungCap.TenNcc />
+                        <ValidationMessage For="@(() => nhaCungCap.TenNcc)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="GhiChu" class="control-label"><b>Ghi chú: </b></label>
+                        <InputText class="form-control" @bind-Value=@nhaCungCap.GhiChu />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Cập nhật nhà cung cấp</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseEditModal">Đóng</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade @deleteModalClass" tabindex="-1" role="dialog" style="@deleteModalDisplayStyle">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#2f8f3a; color:beige">
+                <h5 class="modal-title"><b>Xóa nhà cung cấp</b></h5>
+                <button type="button" class="close" @onclick="CloseDeleteModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background:#e5d2b8; color:brown; font-size:30px">
+                <p style="color:red">Bạn có chắc chắn muốn xóa nhà cung cấp này không?</p>
+                <EditForm Model="@nhaCungCap" OnValidSubmit="deleteNhaCungCap">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <label for="MaNhaCungCap" class="control-label">Mã nhà cung cấp: </label>
+                        <label><b>@nhaCungCap.MaNcc</b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="TenNhaCungCap" class="control-label">Tên nhà cung cấp: </label>
+                        <label><b>@nhaCungCap.TenNcc</b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="GhiChu" class="control-label">Ghi chú: </label>
+                        <label><b>@nhaCungCap.GhiChu</b></label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Xóa nhà cung cấp</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseDeleteModal">Đóng</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private List<DanhMucNCC> dataList = new List<DanhMucNCC>();
+
+    private DanhMucNCC nhaCungCap = new DanhMucNCC();
+
+    private bool holdten = false;
+
+    private bool holdma = false;
+
+
+
+    private string addModalClass = "";
+
+    private string addModalDisplayStyle = "display:none";
+
+    private string editModalClass = "";
+
+    private string editModalDisplayStyle = "display:none";
+
+    private string deleteModalClass = "";
+
+    private string deleteModalDisplayStyle = "display:none";
+
+
+
+    private string maNhaCungCap;
+
+    private string tenNhaCungCap;
+
+
+
+    protected override async Task OnInitializedAsync()
+
+    {
+
+        dataList = await nhaCungCap_Service.GetDanhMucNCC();
+
+    }
+
+
+
+    private void OpenAddModal()
+
+    {
+
+        nhaCungCap = new DanhMucNCC();
+
+        addModalClass = "show";
+
+        addModalDisplayStyle = "display:block";
+
+    }
+
+
+
+    private void CloseAddModal()
+
+    {
+
+        addModalClass = "";
+
+        addModalDisplayStyle = "display:none";
+
+        holdten = false;
+
+        holdma = false;
+
+        StateHasChanged();
+
+    }
+
+
+
+    private void OpenEditModal(DanhMucNCC item)
+
+    {
+
+        nhaCungCap = new DanhMucNCC
+            {
+                AutoId = item.AutoId,
+                MaNcc = item.MaNcc,
+                TenNcc = item.TenNcc,
+                GhiChu = item.GhiChu
+            };
+
+        maNhaCungCap = item.MaNcc;
+
+        tenNhaCungCap = item.TenNcc;
+
+        editModalClass = "show";
+
+        editModalDisplayStyle = "display:block";
+
+    }
+
+
+
+    private void CloseEditModal()
+
+    {
+
+        editModalClass = "";
+
+        editModalDisplayStyle = "display:none";
+
+        holdten = false;
+
+        holdma = false;
+
+        StateHasChanged();
+
+    }
+
+
+
+    private void OpenDeleteModal(DanhMucNCC item)
+
+    {
+
+        nhaCungCap = new DanhMucNCC
+            {
+                AutoId = item.AutoId,
+                MaNcc = item.MaNcc,
+                TenNcc = item.TenNcc,
+                GhiChu = item.GhiChu
+            };
+
+        deleteModalClass = "show";
+
+        deleteModalDisplayStyle = "display:block";
+
+    }
+
+
+
+    private void CloseDeleteModal()
+
+    {
+
+        deleteModalClass = "";
+
+        deleteModalDisplayStyle = "display:none";
+
+        holdten = false;
+
+        holdma = false;
+
+        StateHasChanged();
+
+    }
+
+
+
+    private async Task createNhaCungCap()
+
+    {
+
+        if (await nhaCungCap_Service.IsMaNCCExists(nhaCungCap.MaNcc, "SQLSERVER"))
+
+        {
+
+            holdma = true;
+
+            StateHasChanged();
+
+            ToastService.ShowError("Mã nhà cung cấp đã tồn tại vui lòng nhập lại !");
+
+            return;
+
+        }
+
+        if (await nhaCungCap_Service.IsTenNCCExists(nhaCungCap.TenNcc, "SQLSERVER"))
+
+        {
+
+            holdten = true;
+
+            StateHasChanged();
+
+            ToastService.ShowError("Tên nhà cung cấp đã tồn tại vui lòng nhập lại !");
+
+            return;
+
+        }
+
+        if (await nhaCungCap_Service.AddDanhMucNCC(nhaCungCap))
+
+        {
+
+            ToastService.ShowSuccess("Thêm nhà cung cấp thành công.");
+
+            CloseAddModal();
+
+        }
+
+        else
+
+        {
+
+            ToastService.ShowError("Có lỗi xảy ra.");
+
+        }
+
+        dataList = await nhaCungCap_Service.GetDanhMucNCC();
+
+        StateHasChanged();
+
+    }
+
+
+
+    private async Task updateNhaCungCap()
+
+    {
+
+        if (maNhaCungCap != nhaCungCap.MaNcc && await nhaCungCap_Service.IsMaNCCExists(nhaCungCap.MaNcc, maNhaCungCap))
+
+        {
+
+            holdma = true;
+
+            StateHasChanged();
+
+            ToastService.ShowError("Mã nhà cung cấp đã tồn tại vui lòng nhập lại !");
+
+            return;
+
+        }
+
+        if (tenNhaCungCap != nhaCungCap.TenNcc && await nhaCungCap_Service.IsTenNCCExists(nhaCungCap.TenNcc, maNhaCungCap))
+
+        {
+
+            holdten = true;
+
+            StateHasChanged();
+
+            ToastService.ShowError("Tên nhà cung cấp đã tồn tại vui lòng nhập lại !");
+
+            return;
+
+        }
+
+        else
+
+        {
+
+            try
+
+            {
+
+                await nhaCungCap_Service.UpdateDanhMucNCC(nhaCungCap);
+
+                ToastService.ShowSuccess("Cập nhật nhà cung cấp thành công.");
+
+                CloseEditModal();
+
+            }
+
+            catch (Exception ex)
+
+            {
+
+                //throw ex;
+
+                ToastService.ShowError("Có lỗi xảy ra.");
+
+            }
+
+        }
+
+
+
+        dataList = await nhaCungCap_Service.GetDanhMucNCC();
+
+        StateHasChanged();
+
+    }
+
+
+
+    private async Task deleteNhaCungCap()
+
+    {
+
+        if (await nhaCungCap_Service.DeleteDanhMucNCC(nhaCungCap))
+
+        {
+
+            ToastService.ShowSuccess("Xóa nhà cung cấp thành công.");
+
+            CloseDeleteModal();
+
+        }
+
+        else
+
+        {
+
+            ToastService.ShowError("Có lỗi xảy ra.");
+
+        }
+
+        dataList = await nhaCungCap_Service.GetDanhMucNCC();
+
+        StateHasChanged();
+
+    }
+
+
+
+    private void EditItem(GridCommandEventArgs e)
+
+    {
+        var item = (DanhMucNCC)e.Item;
+        OpenEditModal(item);
+
+    }
+
+
+
+    private void DeleteItem(GridCommandEventArgs e)
+
+    {
+        var item = (DanhMucNCC)e.Item;
+        OpenDeleteModal(item);
+
+    }
+}
