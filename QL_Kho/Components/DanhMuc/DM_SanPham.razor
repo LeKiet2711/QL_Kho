@@ -1,0 +1,380 @@
+﻿@page "/danhmucsanpham"
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+@inject SanPham_Service sanPham_Service
+@inject IToastService ToastService
+
+<h2 style="text-align:center;font-weight:bold">Danh mục sản phẩm</h2>
+<button class="btn btn-success" @onclick="OpenAddModal" style="margin-bottom:10px">
+    <span class="oi oi-plus" aria-hidden="true">Thêm sản phẩm mới</span>
+</button>
+
+@if (dataList == null)
+{
+    <p><em>Loading......</em></p>
+}
+else
+{
+    <TelerikGrid Data="@dataList" Pageable="true" Sortable="true" Height="calc(100vh - 170px)" Resizable="true" Reorderable="true" Class="telerik-grid">
+        <GridColumns>
+            <GridColumn Field="@nameof(DanhMucSanPham.MaSanPham)" Title="Mã sản phẩm" Width="100px" />
+            <GridColumn Field="@nameof(DanhMucSanPham.TenSanPham)" Title="Tên sản phẩm" Width="100px" />
+            <GridColumn Field="LoaiSanPham.TenLsp" Title="Loại sản phẩm" Width="100px" />
+            <GridColumn Field="DonViTinh.TenDvt" Title="Đơn vị tính" Width="100px" />
+            <GridColumn Field="@nameof(DanhMucSanPham.GhiChu)" Title="Ghi chú" Width="100px" />
+            <GridColumn Field="@nameof(DanhMucSanPham.LoaiSanPhamId)" Visible="false" />
+            <GridColumn Field="@nameof(DanhMucSanPham.DonViTinhId)" Visible="false" />
+
+
+            <GridCommandColumn Width="180px">
+                <GridCommandButton Command="Edit" OnClick="@EditItem">
+                    <span class="oi oi-pencil" Width="100px"></span> Sửa
+                </GridCommandButton>
+                <GridCommandButton Command="Delete" OnClick="@DeleteItem">
+                    <span class="oi oi-trash" Width="100px"></span> Xóa
+                </GridCommandButton>
+            </GridCommandColumn>
+        </GridColumns>
+    </TelerikGrid>
+}
+
+<div class="modal fade @addModalClass" tabindex="-1" role="dialog" style="@addModalDisplayStyle">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#2f8f3a; color:beige">
+                <h5 class="modal-title"><b>Thêm mới sản phẩm</b></h5>
+                <button type="button" class="close" @onclick="CloseAddModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background:#e5d2b8; color:brown">
+                <EditForm Model="@sanPham" OnValidSubmit="createSanPham">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <label for="MaSanPham" class="control-label"><b>Mã sản phẩm: </b></label>
+                        <InputText class="form-control" @bind-Value=@sanPham.MaSanPham />
+                        <ValidationMessage For="@(() => sanPham.MaSanPham)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="TenSanPham" class="control-label"><b>Tên sản phẩm: </b></label>
+                        <InputText class="form-control" @bind-Value=@sanPham.TenSanPham />
+                        <ValidationMessage For="@(() => sanPham.TenSanPham)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="LoaiSanPhamID" class="control-label"><b>Loại sản phẩm: </b></label>
+                        <InputSelect class="form-control" @bind-Value="@sanPham.LoaiSanPhamId">
+                            <option value="">-- Chọn loại sản phẩm --</option>
+                            @foreach (var item in lspList)
+                            {
+                                <option value="@item.AutoId">@item.MaLsp - @item.TenLsp</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(()=>sanPham.LoaiSanPhamId)" />
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="DonViTinhID" class="control-label"><b>Đơn vị tính: </b></label>
+                        <InputSelect class="form-control" @bind-Value="@sanPham.DonViTinhId">
+                            <option value="">-- Chọn đơn vị tính --</option>
+                            @foreach (var item in dvtList)
+                            {
+                                <option value="@item.AutoId">@item.MaDvt - @item.TenDvt</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(()=>sanPham.DonViTinhId)" />
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="GhiChu" class="control-label"><b>Ghi chú: </b></label>
+                        <InputText class="form-control" @bind-Value=@sanPham.GhiChu />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseAddModal">Đóng</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade @editModalClass" tabindex="-1" role="dialog" style="@editModalDisplayStyle">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#2f8f3a; color:beige">
+                <h5 class="modal-title"><b>Cập nhật sản phẩm</b></h5>
+                <button type="button" class="close" @onclick="CloseEditModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background:#e5d2b8; color:brown">
+                <EditForm Model="@sanPham" OnValidSubmit="updateSanPham">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <label for="MaSanPham" class="control-label"><b>Mã sản phẩm: </b></label>
+                        <InputText class="form-control" @bind-Value=@sanPham.MaSanPham />
+                        <ValidationMessage For="@(() => sanPham.MaSanPham)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="TenSanPham" class="control-label"><b>Tên sản phẩm: </b></label>
+                        <InputText class="form-control" @bind-Value=@sanPham.TenSanPham />
+                        <ValidationMessage For="@(() => sanPham.TenSanPham)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="LoaiSanPhamID" class="control-label"><b>Loại sản phẩm: </b></label>
+                        <InputSelect class="" @bind-Value="@sanPham.LoaiSanPhamId">
+                            <option value="">-- Chọn loại sản phẩm --</option>
+                            @foreach (var item in lspList)
+                            {
+                                <option value="@item.AutoId">@item.MaLsp - @item.TenLsp</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(()=>sanPham.LoaiSanPhamId)" />
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="DonViTinhID" class="control-label"><b>Đơn vị tính: </b></label>
+                        <InputSelect class="" @bind-Value="@sanPham.DonViTinhId">
+                            <option value="">-- Chọn đơn vị tính --</option>
+                            @foreach (var item in dvtList)
+                            {
+                                <option value="@item.AutoId">@item.MaDvt - @item.TenDvt</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(()=>sanPham.DonViTinhId)" />
+
+                    </div>
+                    <div class="form-group">
+                        <label for="GhiChu" class="control-label"><b>Ghi chú: </b></label>
+                        <InputText class="form-control" @bind-Value=@sanPham.GhiChu />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Cập nhật sản phẩm</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseEditModal">Đóng</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade @deleteModalClass" tabindex="-1" role="dialog" style="@deleteModalDisplayStyle">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#2f8f3a; color:beige">
+                <h5 class="modal-title"><b>Xóa sản phẩm</b></h5>
+                <button type="button" class="close" @onclick="CloseDeleteModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background:#e5d2b8; color:brown; font-size:30px">
+                <p style="color:red">Bạn có chắc chắn muốn xóa sản phẩm này không?</p>
+                <EditForm Model="@sanPham" OnValidSubmit="deleteSanPham">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <label for="MaSanPham" class="control-label">Mã sản phẩm: </label>
+                        <label><b>@sanPham.MaSanPham</b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="TenSanPham" class="control-label">Tên sản phẩm: </label>
+                        <label><b>@sanPham.TenSanPham</b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="LoaiSanPhamID" class="control-label">Loại sản phẩm: </label>
+                        <label><b>@sanPham.LoaiSanPhamId</b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="TenSanPham" class="control-label">Đơn vị tính: </label>
+                        <label><b>@sanPham.DonViTinhId</b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="GhiChu" class="control-label">Ghi chú: </label>
+                        <label><b>@sanPham.GhiChu</b></label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Xóa sản phẩm</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseDeleteModal">Đóng</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<DanhMucSanPham> dataList = new List<DanhMucSanPham>();
+    private List<DanhMucDonViTinh> dvtList= new List<DanhMucDonViTinh>();
+    private List<DanhMucLoaiSanPham> lspList = new List<DanhMucLoaiSanPham>();
+
+    private DanhMucSanPham sanPham = new DanhMucSanPham();
+    private bool holdten = false;
+    private bool holdma = false;
+
+    private string addModalClass = "";
+    private string addModalDisplayStyle = "display:none";
+    private string editModalClass = "";
+    private string editModalDisplayStyle = "display:none";
+    private string deleteModalClass = "";
+    private string deleteModalDisplayStyle = "display:none";
+
+    private string maSanPham;
+    private string tenSanPham;
+
+    protected override async Task OnInitializedAsync()
+    {
+        dataList = await sanPham_Service.GetDanhMucSanPham();
+        dvtList = await sanPham_Service.GetDanhMucDonViTinh();
+        lspList = await sanPham_Service.GetDanhMucLSP();
+    }
+
+    private void OpenAddModal()
+    {
+        sanPham = new DanhMucSanPham();
+        addModalClass = "show";
+        addModalDisplayStyle = "display:block";
+    }
+
+    private void CloseAddModal()
+    {
+        addModalClass = "";
+        addModalDisplayStyle = "display:none";
+        holdten = false;
+        holdma = false;
+        StateHasChanged();
+    }
+
+    private void OpenEditModal(DanhMucSanPham item)
+    {
+        sanPham = new DanhMucSanPham
+            {
+                AutoId = item.AutoId,    
+                MaSanPham = item.MaSanPham,
+                TenSanPham = item.TenSanPham,
+                LoaiSanPhamId = item.LoaiSanPhamId,
+                DonViTinhId = item.DonViTinhId,
+                GhiChu = item.GhiChu
+            };
+        maSanPham = item.MaSanPham;
+        tenSanPham = item.TenSanPham;
+        editModalClass = "show";
+        editModalDisplayStyle = "display:block";
+    }
+
+    private void CloseEditModal()
+    {
+        editModalClass = "";
+        editModalDisplayStyle = "display:none";
+        holdten = false;
+        holdma = false;
+        StateHasChanged();
+    }
+
+    private void OpenDeleteModal(DanhMucSanPham item)
+    {
+        sanPham = new DanhMucSanPham
+            {
+                AutoId = item.AutoId,
+                MaSanPham = item.MaSanPham,
+                TenSanPham = item.TenSanPham,
+                LoaiSanPhamId = item.LoaiSanPhamId,
+                DonViTinhId = item.DonViTinhId,
+                GhiChu = item.GhiChu
+            };
+        deleteModalClass = "show";
+        deleteModalDisplayStyle = "display:block";
+    }
+
+    private void CloseDeleteModal()
+    {
+        deleteModalClass = "";
+        deleteModalDisplayStyle = "display:none";
+        holdten = false;
+        holdma = false;
+        StateHasChanged();
+    }
+
+    private async Task createSanPham()
+    {
+        if (await sanPham_Service.IsMaSanPhamExists(sanPham.MaSanPham, "SQL"))
+        {
+            holdma = true;
+            StateHasChanged();
+            return;
+        }
+        if (await sanPham_Service.AddDanhMucSanPham(sanPham))
+        {
+            ToastService.ShowSuccess("Thêm sản phẩm thành công.");
+            CloseAddModal();
+        }
+        else
+        {
+            ToastService.ShowError("Có lỗi xảy ra.");
+        }
+        dataList = await sanPham_Service.GetDanhMucSanPham();
+        StateHasChanged();
+    }
+
+    private async Task updateSanPham()
+    {
+        if (maSanPham != sanPham.MaSanPham && await sanPham_Service.IsMaSanPhamExists(sanPham.MaSanPham, maSanPham))
+        {
+            holdma = true;
+            StateHasChanged();
+            return;
+        }
+        if (tenSanPham != sanPham.TenSanPham && await sanPham_Service.IsTenSanPhamExists(sanPham.TenSanPham, maSanPham))
+        {
+            holdten = true;
+            StateHasChanged();
+            return;
+        }
+        else
+        {
+            try
+            {
+                await sanPham_Service.UpdateDanhMucSanPham(sanPham);
+                ToastService.ShowSuccess("Cập nhật sản phẩm thành công.");
+                CloseEditModal();
+            }
+            catch
+            {
+                //throw ex;
+                ToastService.ShowError("Có lỗi xảy ra.");
+            }
+        }
+        
+        dataList = await sanPham_Service.GetDanhMucSanPham();
+        StateHasChanged();
+    }
+
+    private async Task deleteSanPham()
+    {
+        if (await sanPham_Service.DeleteDanhMucSanPham(sanPham))
+        {
+            ToastService.ShowSuccess("Xóa sản phẩm thành công.");
+            CloseDeleteModal();
+        }
+        else
+        {
+            ToastService.ShowError("Có lỗi xảy ra.");
+        }
+        dataList = await sanPham_Service.GetDanhMucSanPham();
+        StateHasChanged();
+    }
+
+    private void EditItem(GridCommandEventArgs e)
+    {
+        var item = (DanhMucSanPham)e.Item;
+        OpenEditModal(item);
+    }
+
+    private void DeleteItem(GridCommandEventArgs e)
+    {
+        var item = (DanhMucSanPham)e.Item;
+        OpenDeleteModal(item);
+    }
+
+}

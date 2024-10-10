@@ -1,7 +1,34 @@
 ﻿@page "/"
+@rendermode InteractiveServer
+@inject IToastService toastService
+
+<style>
+    .hero {
+        background-image: url('../images/theme.jpg');
+        background-size: cover;
+        background-position: center;
+        height: 88vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        color: chocolate;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    }
+</style>
 
 <PageTitle>Home</PageTitle>
+<div class="hero">
+    <div class="hero-content">
+        <h1>Quản lý Kho</h1>
+        <button class="btn btn-primary call-to-action" @onclick="ShowToast">Tìm hiểu thêm</button>
+    </div>
+</div>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+@code {
+    private void ShowToast()
+    {
+        toastService.ShowInfo("Chào mừng bạn đến với chương trình quản lý kho");
+    }
+}

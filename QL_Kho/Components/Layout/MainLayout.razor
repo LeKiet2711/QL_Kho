@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@layout TelerikLayout
+@inherits LayoutComponentBase
 @using Blazored.Toast.Configuration
 
 <BlazoredToasts Position="ToastPosition.BottomRight"
@@ -8,6 +9,7 @@
                 ErrorIcon="fa fa-bug" />
 
 <div class="page">
+    <TelerikRootComponent>
     <div class="sidebar">
         <NavMenu />
     </div>
@@ -21,6 +23,8 @@
             @Body
         </article>
     </main>
+    </TelerikRootComponent>
+
 </div>
 
 <div id="blazor-error-ui">

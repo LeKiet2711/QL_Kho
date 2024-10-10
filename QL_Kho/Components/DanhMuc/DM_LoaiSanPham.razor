@@ -12,41 +12,26 @@
 
 @if (dataList == null)
 {
-    <p>Đang tải dữ liệu...</p>
+    <p><em>Loading......</em></p>
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Mã loại sản phẩm</th>
-                <th>Tên loại sản phẩm</th>
-                <th>Ghi Chú</th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (DanhMucLoaiSanPham item in dataList)
-            {
-                <tr>
-                    <td>@item.MaLsp</td>
-                    <td>@item.TenLsp</td>
-                    <td>@item.GhiChu</td>
-                    <td>
-                        <button class="btn btn-warning" @onclick="() => OpenEditModal(item)">
-                            <span class="oi oi-pencil" aria-hidden="true">Sửa</span>
-                        </button>
-                    </td>
-                    <td>
-                        <button class="btn btn-danger" @onclick="() => OpenDeleteModal(item)">
-                            <span class="oi oi-trash" aria-hidden="true">Xóa</span>
-                        </button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <TelerikGrid Data="@dataList" Pageable="true" Sortable="true" Height="calc(100vh - 170px)" Resizable="true" Reorderable="true" Class="telerik-grid">
+        <GridColumns>
+            <GridColumn Field="@nameof(DanhMucLoaiSanPham.MaLsp)" Title="Mã loại sản phẩm" Width="100px" />
+            <GridColumn Field="@nameof(DanhMucLoaiSanPham.TenLsp)" Title="Tên loại sản phẩm" Width="100px" />
+            <GridColumn Field="@nameof(DanhMucLoaiSanPham.GhiChu)" Title="Ghi chú" Width="100px" />
+
+            <GridCommandColumn Width="180px">
+                <GridCommandButton Command="Edit" OnClick="@EditItem">
+                    <span class="oi oi-pencil" Width="100px"></span> Sửa
+                </GridCommandButton>
+                <GridCommandButton Command="Delete" OnClick="@DeleteItem">
+                    <span class="oi oi-trash" Width="100px"></span> Xóa
+                </GridCommandButton>
+            </GridCommandColumn>
+        </GridColumns>
+    </TelerikGrid>
 }
 
 <div class="modal fade @addModalClass" tabindex="-1" role="dialog" style="@addModalDisplayStyle">
@@ -315,6 +300,18 @@ else
         }
         dataList = await loaiSanPham_Service.GetDanhMucLSP();
         StateHasChanged();
+    }
+
+    private void EditItem(GridCommandEventArgs e)
+    {
+        var item = (DanhMucLoaiSanPham)e.Item;
+        OpenEditModal(item);
+    }
+
+    private void DeleteItem(GridCommandEventArgs e)
+    {
+        var item = (DanhMucLoaiSanPham)e.Item;
+        OpenDeleteModal(item);
     }
 
 }
