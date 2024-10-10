@@ -16,6 +16,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<DonViTinh_Service>();
 builder.Services.AddScoped<LoaiSanPham_Service>();
 builder.Services.AddScoped<SanPham_Service>();
+builder.Services.AddScoped<Kho_Service>();
+builder.Services.AddScoped<NhaCungCap_Service>();
 
 builder.Services.AddBlazoredToast();
 

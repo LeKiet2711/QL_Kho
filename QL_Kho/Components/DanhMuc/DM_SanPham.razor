@@ -302,6 +302,14 @@ else
         {
             holdma = true;
             StateHasChanged();
+            ToastService.ShowError("Mã sản phẩm đã tồn tại vui lòng nhập lại !");
+            return;
+        }
+        if (await sanPham_Service.IsTenSanPhamExists(sanPham.MaSanPham, "SQL"))
+        {
+            holdma = true;
+            StateHasChanged();
+            ToastService.ShowError("Tên sản phẩm đã tồn tại vui lòng nhập lại !");
             return;
         }
         if (await sanPham_Service.AddDanhMucSanPham(sanPham))
@@ -323,12 +331,14 @@ else
         {
             holdma = true;
             StateHasChanged();
+            ToastService.ShowError("Mã sản phẩm đã tồn tại vui lòng nhập lại !");
             return;
         }
         if (tenSanPham != sanPham.TenSanPham && await sanPham_Service.IsTenSanPhamExists(sanPham.TenSanPham, maSanPham))
         {
             holdten = true;
             StateHasChanged();
+            ToastService.ShowError("Tên sản phẩm đã tồn tại vui lòng nhập lại !");
             return;
         }
         else

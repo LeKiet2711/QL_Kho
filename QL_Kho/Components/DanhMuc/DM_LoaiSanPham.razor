@@ -233,12 +233,14 @@ else
         {
             holdma = true;
             StateHasChanged();
+            ToastService.ShowError("Mã loại sản phẩm đã tồn tại vui lòng nhập lại !");
             return;
         }
         if (await loaiSanPham_Service.IsTenLSPExists(loaiSanPham.TenLsp, "SQLSERVER"))
         {
             holdten = true;
             StateHasChanged();
+            ToastService.ShowError("Tên loại sản phẩm đã tồn tại vui lòng nhập lại !");
             return;
         }
         if (await loaiSanPham_Service.AddDanhMucLSP(loaiSanPham))
@@ -256,16 +258,18 @@ else
 
     private async Task updateLSP()
     {
-        if (maLSP != loaiSanPham.MaLsp && await loaiSanPham_Service.IsMaLSPExists(loaiSanPham.MaLsp, "SQL"))
+        if (maLSP != loaiSanPham.MaLsp && await loaiSanPham_Service.IsMaLSPExists(loaiSanPham.MaLsp, maLSP))
         {
             holdma = true;
             StateHasChanged();
+            ToastService.ShowError("Mã loại sản phẩm đã tồn tại vui lòng nhập lại !");
             return;
         }
-        if (tenLSP != loaiSanPham.TenLsp && await loaiSanPham_Service.IsTenLSPExists(loaiSanPham.TenLsp, "SQL"))
+        if (tenLSP != loaiSanPham.TenLsp && await loaiSanPham_Service.IsTenLSPExists(loaiSanPham.TenLsp, maLSP))
         {
             holdten = true;
             StateHasChanged();
+            ToastService.ShowError("Tên loại sản phẩm đã tồn tại vui lòng nhập lại !");
             return;
         }
         else

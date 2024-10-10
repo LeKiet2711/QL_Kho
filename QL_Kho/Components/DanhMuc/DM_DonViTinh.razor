@@ -233,12 +233,14 @@ else
         {
             holdma = true;
             StateHasChanged();
+            ToastService.ShowError("Mã đơn vị tính đã tồn tại vui lòng nhập lại !");
             return;
         }
         if (await donViTinh_Service.IsTenDVTExists(donViTinh.TenDvt,"SQLSERVER"))
         {
             holdten = true;
             StateHasChanged();
+            ToastService.ShowError("Tên đơn vị tính đã tồn tại vui lòng nhập lại !");
             return;
         }
         if (await donViTinh_Service.AddDanhMucDonViTinh(donViTinh))
@@ -256,16 +258,18 @@ else
 
     private async Task updateDonViTinh()
     {
-        if (maDonVi != donViTinh.MaDvt && await donViTinh_Service.IsMADVTExists(donViTinh.MaDvt, "SQL"))
+        if (maDonVi != donViTinh.MaDvt && await donViTinh_Service.IsMADVTExists(donViTinh.MaDvt, maDonVi))
         {
             holdma = true;
             StateHasChanged();
+            ToastService.ShowError("Mã đơn vị tính đã tồn tại vui lòng nhập lại !");
             return;
         }
-        if (tenDonVi != donViTinh.TenDvt && await donViTinh_Service.IsTenDVTExists(donViTinh.TenDvt, "SQL"))
+        if (tenDonVi != donViTinh.TenDvt && await donViTinh_Service.IsTenDVTExists(donViTinh.TenDvt, maDonVi))
         {
             holdten = true;
             StateHasChanged();
+            ToastService.ShowError("Tên đơn vị tính đã tồn tại vui lòng nhập lại !");
             return;
         }
         else
