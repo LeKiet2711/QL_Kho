@@ -1,0 +1,315 @@
+﻿@page "/danhmuckho"
+@rendermode InteractiveServer
+@attribute [StreamRendering]
+@inject QL_Kho.Service.Kho_Service KhoService
+@inject IToastService ToastService
+
+<h2 style="text-align:center;font-weight:bold">Danh mục kho</h2>
+<button class="btn btn-success" @onclick="OpenAddModal" style="margin-bottom:10px">
+    <span class="oi oi-plus" aria-hidden="true">Thêm kho mới</span>
+</button>
+
+@if (dataList == null)
+{
+    <p><em>Loading......</em></p>
+}
+else
+{
+    <TelerikGrid Data="@dataList" Pageable="true" Sortable="true" Height="calc(100vh - 170px)" Resizable="true" Reorderable="true" Class="telerik-grid">
+        <GridColumns>
+            <GridColumn Field="@nameof(DanhMucKho.MaKho)" Title="Mã kho" Width="100px" />
+            <GridColumn Field="@nameof(DanhMucKho.TenKho)" Title="Tên kho" Width="100px" />
+            <GridColumn Field="@nameof(DanhMucKho.GhiChu)" Title="Ghi chú" Width="100px" />
+
+            <GridCommandColumn Width="180px">
+                <GridCommandButton Command="Edit" OnClick="@EditItem">
+                    <span class="oi oi-pencil" Width="100px"></span> Sửa
+                </GridCommandButton>
+                <GridCommandButton Command="Delete" OnClick="@DeleteItem">
+                    <span class="oi oi-trash" Width="100px"></span> Xóa
+                </GridCommandButton>
+            </GridCommandColumn>
+        </GridColumns>
+    </TelerikGrid>
+}
+
+<div class="modal fade @addModalClass" tabindex="-1" role="dialog" style="@addModalDisplayStyle">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#2f8f3a; color:beige">
+                <h5 class="modal-title"><b>Thêm mới kho</b></h5>
+                <button type="button" class="close" @onclick="CloseAddModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background:#e5d2b8; color:brown">
+                <EditForm Model="@kho" OnValidSubmit="createKho">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <label for="MaKho" class="control-label"><b>Mã kho: </b></label>
+                        <InputText class="form-control" @bind-Value=@kho.MaKho />
+                        <ValidationMessage For="@(() => kho.MaKho)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="TenKho" class="control-label"><b>Tên kho: </b></label>
+                        <InputText class="form-control" @bind-Value=@kho.TenKho />
+                        <ValidationMessage For="@(() => kho.TenKho)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="GhiChu" class="control-label"><b>Ghi chú: </b></label>
+                        <InputText class="form-control" @bind-Value=@kho.GhiChu />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Thêm kho</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseAddModal">Đóng</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade @editModalClass" tabindex="-1" role="dialog" style="@editModalDisplayStyle">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#2f8f3a; color:beige">
+                <h5 class="modal-title"><b>Cập nhật kho</b></h5>
+                <button type="button" class="close" @onclick="CloseEditModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background:#e5d2b8; color:brown">
+                <EditForm Model="@kho" OnValidSubmit="updateKho">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <label for="MaKho" class="control-label"><b>Mã kho: </b></label>
+                        <InputText class="form-control" @bind-Value=@kho.MaKho />
+                        <ValidationMessage For="@(() => kho.MaKho)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="TenKho" class="control-label"><b>Tên kho: </b></label>
+                        <InputText class="form-control" @bind-Value=@kho.TenKho />
+                        <ValidationMessage For="@(() => kho.TenKho)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="GhiChu" class="control-label"><b>Ghi chú: </b></label>
+                        <InputText class="form-control" @bind-Value=@kho.GhiChu />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Cập nhật kho</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseEditModal">Đóng</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* <div class="modal fade @deleteModalClass" tabindex="-1" role="dialog" style="@deleteModalDisplayStyle">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#2f8f3a; color:beige">
+                <h5 class="modal-title"><b>Xóa kho</b></h5>
+                <button type="button" class="close" @onclick="CloseDeleteModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background:#e5d2b8; color:brown; font-size:30px">
+                <p style="color:red">Bạn có chắc chắn muốn xóa kho này không?</p>
+                <EditForm Model="@kho" OnValidSubmit="deleteKho">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <label for="MaKho" class="control-label">Mã kho: </label>
+                        <label><b>@kho.MaKho</b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="TenKho" class="control-label">Tên kho: </label>
+                        <label><b>@kho.TenKho</b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="GhiChu" class="control-label">Ghi chú: </label>
+                        <label><b>@kho.GhiChu</b></label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Xóa kho</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseDeleteModal">Đóng</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div> *@
+
+@code {
+    private List<DanhMucKho> dataList = new List<DanhMucKho>();
+    private DanhMucKho kho = new DanhMucKho();
+    private bool holdten = false;
+    private bool holdma = false;
+
+    private string addModalClass = "";
+    private string addModalDisplayStyle = "display:none";
+    private string editModalClass = "";
+    private string editModalDisplayStyle = "display:none";
+    private string deleteModalClass = "";
+    private string deleteModalDisplayStyle = "display:none";
+
+    private string maKho;
+    private string tenKho;
+
+    protected override async Task OnInitializedAsync()
+    {
+        dataList = await KhoService.GetDanhMucKho();
+    }
+
+    private void OpenAddModal()
+    {
+        kho = new DanhMucKho();
+        addModalClass = "show";
+        addModalDisplayStyle = "display:block";
+    }
+
+    private void CloseAddModal()
+    {
+        addModalClass = "";
+        addModalDisplayStyle = "display:none";
+        holdten = false;
+        holdma = false;
+        StateHasChanged();
+    }
+
+    private void OpenEditModal(DanhMucKho item)
+    {
+        kho = new DanhMucKho
+        {
+            AutoId = item.AutoId,
+            MaKho = item.MaKho,
+            TenKho = item.TenKho,
+            GhiChu = item.GhiChu
+        };
+        maKho = item.MaKho;
+        tenKho = item.TenKho;
+        editModalClass = "show";
+        editModalDisplayStyle = "display:block";
+    }
+
+    private void CloseEditModal()
+    {
+        editModalClass = "";
+        editModalDisplayStyle = "display:none";
+        holdten = false;
+        holdma = false;
+        StateHasChanged();
+    }
+
+    private void OpenDeleteModal(DanhMucKho item)
+    {
+        kho = new DanhMucKho
+        {
+            AutoId = item.AutoId,
+            MaKho = item.MaKho,
+            TenKho = item.TenKho,
+            GhiChu = item.GhiChu
+        };
+        deleteModalClass = "show";
+        deleteModalDisplayStyle = "display:block";
+    }
+
+    private void CloseDeleteModal()
+    {
+        deleteModalClass = "";
+        deleteModalDisplayStyle = "display:none";
+        holdten = false;
+        holdma = false;
+        StateHasChanged();
+    }
+
+    private async Task createKho()
+    {
+        if (await KhoService.IsMaKhoExists(kho.MaKho, "SQLSERVER"))
+        {
+            holdma = true;
+            StateHasChanged();
+            ToastService.ShowError("Mã kho đã tồn tại vui lòng nhập lại !");
+            return;
+        }
+        if (await KhoService.IsTenKhoExists(kho.TenKho, "SQLSERVER"))
+        {
+            holdten = true;
+            StateHasChanged();
+            ToastService.ShowError("Tên kho đã tồn tại vui lòng nhập lại !");
+            return;
+        }
+        if (await KhoService.AddDanhMucKho(kho))
+        {
+            ToastService.ShowSuccess("Thêm kho thành công.");
+            CloseAddModal();
+        }
+        else
+        {
+            ToastService.ShowError("Có lỗi xảy ra.");
+        }
+        dataList = await KhoService.GetDanhMucKho();
+        StateHasChanged();
+    }
+
+    private async Task updateKho()
+    {
+        if (maKho != kho.MaKho && await KhoService.IsMaKhoExists(kho.MaKho, maKho))
+        {
+            holdma = true;
+            StateHasChanged();
+            ToastService.ShowError("Mã kho đã tồn tại vui lòng nhập lại !");
+            return;
+        }
+        if (tenKho != kho.TenKho && await KhoService.IsTenKhoExists(kho.TenKho, maKho))
+        {
+            holdten = true;
+            StateHasChanged();
+            ToastService.ShowError("Tên kho đã tồn tại vui lòng nhập lại !");
+            return;
+        }
+        else
+        {
+            try
+            {
+                await KhoService.UpdateDanhMucKho(kho);
+                ToastService.ShowSuccess("Cập nhật kho thành công.");
+                CloseEditModal();
+            }
+            catch (Exception ex)
+            {
+                ToastService.ShowError("Có lỗi xảy ra.");
+            }
+        }
+
+        dataList = await KhoService.GetDanhMucKho();
+        StateHasChanged();
+    }
+
+    private async Task deleteKho()
+    {
+        if (await KhoService.DeleteDanhMucKho(kho))
+        {
+            ToastService.ShowSuccess("Xóa kho thành công.");
+            CloseDeleteModal();
+        }
+        else
+        {
+            ToastService.ShowError("Có lỗi xảy ra.");
+        }
+        dataList = await KhoService.GetDanhMucKho();
+        StateHasChanged();
+    }
+
+    private void EditItem(GridCommandEventArgs e)
+    {
+        var item = (DanhMucKho)e.Item;
+        OpenEditModal(item);
+    }
+
+    private void DeleteItem(GridCommandEventArgs e)
+    {
+        var item = (DanhMucKho)e.Item;
+        OpenDeleteModal(item);
+    }
+}
