@@ -1,0 +1,425 @@
+﻿@page "/phieunhap"
+@rendermode InteractiveServer
+@inject PhieuNhap_Service phieuNhap_Service
+@inject ChiTietPhieuNhap_Service chitietPhieuNhap_Service
+@inject IToastService ToastService
+
+<h2 style="text-align:center;font-weight:bold">Phiếu nhập kho</h2>
+<button class="btn btn-success" @onclick="OpenAddModal" style="margin-bottom:10px">
+    <span class="oi oi-plus" aria-hidden="true">Thêm phiếu nhập mới</span>
+</button>
+
+@if (dataList == null)
+{
+    <p><em>Loading......</em></p>
+}
+else
+{
+    <TelerikGrid Data="@dataList" Pageable="true" Sortable="true" Height="calc(100vh - 170px)" Resizable="true" Reorderable="true" Class="telerik-grid">
+        <GridColumns>
+            <GridColumn Field="@nameof(XNK_NhapKho.SoPhieuNhap)" Title="Số phiếu nhập" Width="100px" />
+            <GridColumn Field="Ncc.TenNcc" Title="Nhà cung cấp" Width="100px" />
+            <GridColumn Field="Kho.TenKho" Title="Kho" Width="100px" />
+            <GridColumn Field="@nameof(XNK_NhapKho.NgayNhapKho)" Title="Ngày nhập kho" Width="100px" />
+            <GridColumn Field="@nameof(XNK_NhapKho.GhiChu)" Title="Ghi chú" Width="100px" />
+
+            <GridCommandColumn Width="180px">
+                <GridCommandButton Command="Edit" OnClick="@EditItem">
+                    <span class="oi oi-pencil" Width="100px"></span> Sửa
+                </GridCommandButton>
+                <GridCommandButton Command="Delete" OnClick="@DeleteItem">
+                    <span class="oi oi-trash" Width="100px"></span> Xóa
+                </GridCommandButton>
+            </GridCommandColumn>
+        </GridColumns>
+    </TelerikGrid>
+}
+
+<div class="modal fade @addModalClass" tabindex="-1" role="dialog" style="@addModalDisplayStyle">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#2f8f3a; color:beige">
+                <h5 class="modal-title"><b>Thêm mới phiếu nhập</b></h5>
+                <button type="button" class="close" @onclick="CloseAddModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background:#e5d2b8; color:brown">
+                <EditForm Model="@phieuNhap" OnValidSubmit="createPhieuNhap">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <label for="SoPhieuNhap" class="control-label"><b>Số phiếu nhập: </b></label>
+                        <InputText class="form-control" @bind-Value=@phieuNhap.SoPhieuNhap />
+                        <ValidationMessage For="@(() => phieuNhap.SoPhieuNhap)" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="nccID" class="control-label"><b>Nhà cung cấp: </b></label>
+                        <InputSelect class="form-control" @bind-Value="@phieuNhap.NccId">
+                            <option value="">-- Chọn nhà cung cấp --</option>
+                            @foreach (var item in nccList)
+                            {
+                                <option value="@item.AutoId">@item.MaNcc - @item.TenNcc</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(()=>phieuNhap.NccId)" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="khoID" class="control-label"><b>Kho: </b></label>
+                        <InputSelect class="form-control" @bind-Value="@phieuNhap.KhoId">
+                            <option value="">-- Chọn kho --</option>
+                            @foreach (var item in khoList)
+                            {
+                                <option value="@item.AutoId">@item.MaKho - @item.TenKho</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(()=>phieuNhap.KhoId)" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="NgayNhapKho" class="control-label"><b>Ngày nhập kho: </b></label>
+                        <InputDate class="form-control" @bind-Value=@phieuNhap.NgayNhapKho />
+                        <ValidationMessage For="@(() => phieuNhap.NgayNhapKho)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="GhiChu" class="control-label"><b>Ghi chú: </b></label>
+                        <InputText class="form-control" @bind-Value=@phieuNhap.GhiChu />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Thêm phiếu nhập</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseAddModal">Đóng</button>
+                    </div>
+
+                    <a class="btn btn-secondary" @onclick="OpenAddChiTietModal" style="margin-top:5px">Thêm</a>
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>Mã sản phẩm</th>
+                            <th>Số lượng nhập</th>
+                            <th>Đơn giá</th>
+                            <th>Thành tiền</th>
+                            <th>Xóa</th>
+                        </tr>
+                        @foreach (XNK_NhapKhoRawData ct in lstCTPN)
+                        {
+                            <tr>
+                                <th>@ct.SanPhamId</th>
+                                <th>@ct.SlNhap</th>
+                                <th>@ct.DonGiaNhap</th>
+                                <th>@(ct.SlNhap * ct.DonGiaNhap)</th>
+                                <th>
+                                    <button type="button" class="btn btn-danger" style="color:black" @onclick="() => RemoveChiTiet(ct)">Xóa</button>
+                                </th>
+                            </tr>
+                        }
+                    </table>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade @editModalClass" tabindex="-1" role="dialog" style="@editModalDisplayStyle">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#2f8f3a; color:beige">
+                <h5 class="modal-title"><b>Sửa phiếu nhập</b></h5>
+                <button type="button" class="close" @onclick="CloseEditModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background:#e5d2b8; color:brown">
+                <EditForm Model="@phieuNhap" OnValidSubmit="updatePhieuNhap">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <label for="SoPhieuNhap" class="control-label"><b>Số phiếu nhập: </b></label>
+                        <InputText class="form-control" @bind-Value=@phieuNhap.SoPhieuNhap />
+                        <ValidationMessage For="@(() => phieuNhap.SoPhieuNhap)" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nccID" class="control-label"><b>Nhà cung cấp: </b></label>
+                        <InputSelect class="form-control" @bind-Value="@phieuNhap.NccId">
+                            <option value="">-- Chọn nhà cung cấp --</option>
+                            @foreach (var item in nccList)
+                            {
+                                <option value="@item.AutoId">@item.MaNcc - @item.TenNcc</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(()=>phieuNhap.NccId)" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="khoID" class="control-label"><b>Kho: </b></label>
+                        <InputSelect class="form-control" @bind-Value="@phieuNhap.KhoId">
+                            <option value="">-- Chọn kho --</option>
+                            @foreach (var item in khoList)
+                            {
+                                <option value="@item.AutoId">@item.MaKho - @item.TenKho</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(()=>phieuNhap.KhoId)" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="NgayNhapKho" class="control-label"><b>Ngày nhập kho: </b></label>
+                        <InputDate class="form-control" @bind-Value=@phieuNhap.NgayNhapKho />
+                        <ValidationMessage For="@(() => phieuNhap.NgayNhapKho)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="GhiChu" class="control-label"><b>Ghi chú: </b></label>
+                        <InputText class="form-control" @bind-Value=@phieuNhap.GhiChu />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Sửa phiếu nhập</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseAddModal">Đóng</button>
+                    </div>          
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade @addChiTietModalClass" tabindex="-1" role="dialog" style="@addChiTietModalDisplayStyle">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#2f8f3a; color:#dedcd8">
+                <h5 class="modal-title"><b>Thêm chi tiết phiếu nhập</b></h5>
+                <button type="button" class="close" @onclick="CloseAddChiTietModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <InputSelect class="form-control" @bind-Value="@newChiTiet.SanPhamId">
+                        <option value="">-- Chọn sản phẩm --</option>
+                        @foreach (var item in sanPhamList)
+                        {
+                            <option value="@item.AutoId">@item.MaSanPham - @item.TenSanPham</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="form-group">
+                    <label for="SoLuong">Số lượng nhập:</label>
+                    <InputNumber class="form-control" @bind-Value="newChiTiet.SlNhap" />
+                </div>
+                <div class="form-group">
+                    <label for="DonGia">Đơn giá:</label>
+                    <InputNumber class="form-control" @bind-Value="newChiTiet.DonGiaNhap" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @onclick="AddChiTiet">Thêm</button>
+                    <button type="button" class="btn btn-secondary" @onclick="CloseAddChiTietModal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade @deleteModalClass" tabindex="-1" role="dialog" style="@deleteModalDisplayStyle">
+    <div class="modal-dialog model-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#2f8f3a; color:beige">
+                <h5 class="modal-title"><b>Xóa phiếu nhập</b></h5>
+                <button type="button" class="close" @onclick="CloseDeleteModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background:#dedcd8; color:brown; font-size:30px">
+                <p style="color:red">Bạn có chắc chắn muốn xóa phiếu nhập này không?</p>
+                <EditForm Model="@phieuNhap" OnValidSubmit="deletePhieuNhap">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <label for="SoPhieuNhap" class="control-label">Số phiếu nhập: </label>
+                        <label><b>@phieuNhap.SoPhieuNhap</b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="TenKho" class="control-label">Nhà cung cấp: </label>
+                        <label><b>@phieuNhap.NccId</b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="MoTa" class="control-label">Tên kho: </label>
+                        <label><b>@phieuNhap.KhoId</b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="NgayNhap" class="control-label">Ngày nhập kho: </label>
+                        <label><b>@phieuNhap.NgayNhapKho</b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="Ghichu" class="control-label">Ghi chú: </label>
+                        <label><b>@phieuNhap.GhiChu</b></label>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Xóa phiếu nhập</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseDeleteModal">Đóng</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private List<XNK_NhapKho> dataList = new List<XNK_NhapKho>();
+    public List<XNK_NhapKhoRawData> lstCTPN = new List<XNK_NhapKhoRawData>();
+    private XNK_NhapKho phieuNhap = new XNK_NhapKho();
+    private List<DanhMucNCC> nccList = new List<DanhMucNCC>();
+    private List<DanhMucKho> khoList = new List<DanhMucKho>();
+    private List<DanhMucSanPham> sanPhamList = new List<DanhMucSanPham>();
+
+    private XNK_NhapKhoRawData newChiTiet = new XNK_NhapKhoRawData();
+
+    private string addModalClass = "";
+    private string addModalDisplayStyle = "display:none";
+    private string editModalClass = "";
+    private string editModalDisplayStyle = "display:none";
+    private string deleteModalClass = "";
+    private string deleteModalDisplayStyle = "display:none";
+    private string addChiTietModalClass = "";
+    private string addChiTietModalDisplayStyle = "display:none";
+
+    protected override async Task OnInitializedAsync()
+    {
+        dataList = await phieuNhap_Service.GetPhieuNhap();
+        nccList = await phieuNhap_Service.GetDanhMucNCC();
+        khoList = await phieuNhap_Service.GetDanhMucKho();
+        sanPhamList = await phieuNhap_Service.GetDanhMucSanPham();
+    }
+
+    private void OpenAddModal()
+    {
+        phieuNhap = new XNK_NhapKho();
+        addModalClass = "show";
+        addModalDisplayStyle = "display:block";
+    }
+
+    private void CloseAddModal()
+    {
+        addModalClass = "";
+        addModalDisplayStyle = "display:none";
+    }
+
+    private void OpenEditModal(XNK_NhapKho phieuNhapToEdit)
+    {
+        phieuNhap = phieuNhapToEdit;
+        editModalClass = "show";
+        editModalDisplayStyle = "display:block";
+    }
+
+    private void CloseEditModal()
+    {
+        editModalClass = "";
+        editModalDisplayStyle = "display:none";
+    }
+
+    private void OpenDeleteModal(XNK_NhapKho phieuNhapToDelete)
+    {
+        phieuNhap = phieuNhapToDelete;
+        deleteModalClass = "show";
+        deleteModalDisplayStyle = "display:block";
+    }
+
+    private void CloseDeleteModal()
+    {
+        deleteModalClass = "";
+        deleteModalDisplayStyle = "display:none";
+    }
+
+    private void OpenAddChiTietModal()
+    {
+        newChiTiet = new XNK_NhapKhoRawData(); // Khởi tạo chi tiết phiếu nhập mới
+        addChiTietModalClass = "show";
+        addChiTietModalDisplayStyle = "display:block";
+    }
+
+    private void CloseAddChiTietModal()
+    {
+        addChiTietModalClass = "";
+        addChiTietModalDisplayStyle = "display:none";
+        StateHasChanged();
+    }
+
+    private void AddChiTiet()
+    {
+        lstCTPN.Add(newChiTiet);
+        CloseAddChiTietModal();
+    }
+
+    private void RemoveChiTiet(XNK_NhapKhoRawData chitiet)
+    {
+        lstCTPN.Remove(chitiet);
+        StateHasChanged();
+    }
+
+    private async Task createPhieuNhap()
+    {
+        if(await phieuNhap_Service.IsSoPhieuNhapExists(phieuNhap.SoPhieuNhap, "ORACLE"))
+        {
+            ToastService.ShowError("Số phiếu nhập đã tồn tại!");
+            return;
+        }
+        if (await phieuNhap_Service.AddPhieuNhap(phieuNhap))
+        {
+            foreach (XNK_NhapKhoRawData ctpn in lstCTPN)
+            {
+                ctpn.NhapKhoId = phieuNhap.AutoId;
+                await chitietPhieuNhap_Service.AddChiTietPhieuNhap(ctpn);
+            }
+            ToastService.ShowSuccess("Thêm phiếu nhập thành công!");
+            dataList = await phieuNhap_Service.GetPhieuNhap();
+            CloseAddModal();
+        }
+        else
+        {
+            ToastService.ShowError("Thêm phiếu nhập thất bại!");
+        }
+    }
+
+    private async Task updatePhieuNhap()
+    {
+        var result = await phieuNhap_Service.UpdatePhieuNhap(phieuNhap);
+        if (result)
+        {
+            ToastService.ShowSuccess("Cập nhật phiếu nhập thành công!");
+            dataList = await phieuNhap_Service.GetPhieuNhap();
+            CloseEditModal();
+        }
+        else
+        {
+            ToastService.ShowError("Cập nhật phiếu nhập thất bại!");
+        }
+    }
+
+    private async Task deletePhieuNhap()
+    {
+        try{
+            await phieuNhap_Service.DeletePhieuNhap(phieuNhap);
+            await chitietPhieuNhap_Service.DeleteChiTietPhieuNhap(phieuNhap.AutoId);
+            ToastService.ShowSuccess("Xóa phiếu nhập thành công!");
+            dataList = await phieuNhap_Service.GetPhieuNhap();
+            CloseDeleteModal();
+        }
+        catch (Exception ex)
+        {
+            //throw e;
+            ToastService.ShowError("Có lỗi xảy ra!");
+        }
+    }
+
+    private void EditItem(GridCommandEventArgs args)
+    {
+        var phieuNhapToEdit = (XNK_NhapKho)args.Item;
+        OpenEditModal(phieuNhapToEdit);
+    }
+
+    private void DeleteItem(GridCommandEventArgs args)
+    {
+        var phieuNhapToDelete = (XNK_NhapKho)args.Item;
+        OpenDeleteModal(phieuNhapToDelete);
+    }
+}

@@ -19,7 +19,7 @@ namespace QL_Kho.Service
         public async Task<bool> AddDanhMucLSP(DanhMucLoaiSanPham danhmucloaisanpham)
         {
             await _dbconnect.DanhMucLoaiSanPham.AddAsync(danhmucloaisanpham);
-            await _dbconnect.SaveChangesAsync();
+            _dbconnect.SaveChangesAsync();
             return true;
         }
 
@@ -31,7 +31,7 @@ namespace QL_Kho.Service
 
         public async Task<bool> UpdateDanhMucLSP(DanhMucLoaiSanPham danhmuclsp)
         {
-            var existingEntity = await _dbconnect.DanhMucLoaiSanPham.FirstOrDefaultAsync(lsp => lsp.MaLsp == danhmuclsp.MaLsp && lsp.IsDeleted == false);
+            var existingEntity = await _dbconnect.DanhMucLoaiSanPham.FirstOrDefaultAsync(lsp => lsp.AutoId == danhmuclsp.AutoId && lsp.IsDeleted == false);
             if (existingEntity != null)
             {
                 existingEntity.MaLsp = danhmuclsp.MaLsp;
