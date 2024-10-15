@@ -3,6 +3,7 @@
 @inject PhieuNhap_Service phieuNhap_Service
 @inject ChiTietPhieuNhap_Service chitietPhieuNhap_Service
 @inject IToastService ToastService
+@inject NavigationManager Navigation
 
 <h2 style="text-align:center;font-weight:bold">Phiếu nhập kho</h2>
 <button class="btn btn-success" @onclick="OpenAddModal" style="margin-bottom:10px">
@@ -29,6 +30,9 @@ else
                 </GridCommandButton>
                 <GridCommandButton Command="Delete" OnClick="@DeleteItem">
                     <span class="oi oi-trash" Width="100px"></span> Xóa
+                </GridCommandButton>
+                <GridCommandButton OnClick="() => ViewDetails((context as XNK_NhapKho).AutoId)">
+                    <span class="oi oi-eye" Width="100px"></span> Xem chi tiết phiếu nhập
                 </GridCommandButton>
             </GridCommandColumn>
         </GridColumns>
@@ -421,5 +425,10 @@ else
     {
         var phieuNhapToDelete = (XNK_NhapKho)args.Item;
         OpenDeleteModal(phieuNhapToDelete);
+    }
+
+    private void ViewDetails(int Auto_ID)
+    {
+        Navigation.NavigateTo($"/chitietphieunhap/{Auto_ID}");
     }
 }

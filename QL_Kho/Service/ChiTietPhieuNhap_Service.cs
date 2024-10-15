@@ -39,5 +39,10 @@ namespace QL_Kho.Service
             return false;
         }
 
+        public async Task<List<XNK_NhapKhoRawData>> GetChiTietByPhieuNhap(int id)
+        {
+            return await _dbconnect.XNK_NhapKhoRawData.Where(ctpn => ctpn.NhapKhoId == id && ctpn.IsDeleted == false).ToListAsync();
+        }
+
     }
 }

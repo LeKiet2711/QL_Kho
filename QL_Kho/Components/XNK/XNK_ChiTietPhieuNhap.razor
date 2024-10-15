@@ -1,0 +1,112 @@
+﻿@page "/chitietphieunhap/{ID:int}"
+@rendermode InteractiveServer
+@inject ChiTietPhieuNhap_Service chitietPhieuNhap_Service
+@inject IToastService ToastService
+@inject NavigationManager Navigation
+
+<style>
+    .modal {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+</style>
+
+
+<h2 style="text-align:center;font-weight:bold">Chi tiết phiếu nhập kho @ID</h2>
+@if (dataList == null)
+{
+    <p><em>Loading......</em></p>
+}
+else
+{
+    <TelerikGrid Data="@dataList" Pageable="true" Sortable="true" Height="calc(100vh - 170px)" Resizable="true" Reorderable="true" Class="telerik-grid">
+        <GridColumns>
+            <GridColumn Field="SanPham.TenSanPham" Title="Sản phẩm" Width="100px" />
+            <GridColumn Field="@nameof(XNK_NhapKhoRawData.SlNhap)" Title="Số lượng nhập" Width="100px" />
+            <GridColumn Field="@nameof(XNK_NhapKhoRawData.DonGiaNhap)" Title="Đơn giá nhập" Width="100px" />
+
+            <GridCommandColumn Width="180px">
+                <GridCommandButton Command="Edit" OnClick="@EditItem">
+                    <span class="oi oi-pencil" Width="100px"></span> Sửa
+                </GridCommandButton>
+                <GridCommandButton Command="Delete" OnClick="@DeleteItem">
+                    <span class="oi oi-trash" Width="100px"></span> Xóa
+                </GridCommandButton>
+            </GridCommandColumn>
+        </GridColumns>
+    </TelerikGrid>
+}
+
+
+@code {
+    [Parameter]
+    public int ID {get; set;}
+
+    public List<XNK_NhapKhoRawData> dataList = new List<XNK_NhapKhoRawData>();
+    private XNK_NhapKhoRawData chitietPhieuNhap = new XNK_NhapKhoRawData();
+
+    private string addModalClass = "";
+    private string addModalDisplayStyle = "display:none";
+    private string editModalClass = "";
+    private string editModalDisplayStyle = "display:none";
+    private string deleteModalClass = "";
+    private string deleteModalDisplayStyle = "display:none";
+
+    protected override async Task OnInitializedAsync()
+    {
+        dataList = await chitietPhieuNhap_Service.GetChiTietByPhieuNhap(ID);
+
+    }
+
+    private void OpenAddModal()
+    {
+        chitietPhieuNhap = new XNK_NhapKhoRawData();
+        addModalClass = "show";
+        addModalDisplayStyle = "display:block";
+    }
+
+    private void CloseAddModal()
+    {
+        addModalClass = "";
+        addModalDisplayStyle = "display:none";
+    }
+
+    private void OpenEditModal(XNK_NhapKhoRawData ctpnEdit)
+    {
+        chitietPhieuNhap = ctpnEdit;
+        editModalClass = "show";
+        editModalDisplayStyle = "display:block";
+    }
+
+    private void CloseEditModal()
+    {
+        editModalClass = "";
+        editModalDisplayStyle = "display:none";
+    }
+
+    private void OpenDeleteModal(XNK_NhapKhoRawData ctpnDelete)
+    {
+        chitietPhieuNhap = ctpnDelete;
+        deleteModalClass = "show";
+        deleteModalDisplayStyle = "display:block";
+    }
+
+    private void CloseDeleteModal()
+    {
+        deleteModalClass = "";
+        deleteModalDisplayStyle = "display:none";
+    }
+
+    private void EditItem(GridCommandEventArgs args)
+    {
+        var ctpnEdit = (XNK_NhapKhoRawData)args.Item;
+        OpenEditModal(ctpnEdit);
+    }
+
+    private void DeleteItem(GridCommandEventArgs args)
+    {
+        var ctpnDelete = (XNK_NhapKhoRawData)args.Item;
+        OpenDeleteModal(ctpnDelete);
+    }
+
+
+}
