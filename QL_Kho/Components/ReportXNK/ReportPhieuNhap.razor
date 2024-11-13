@@ -1,0 +1,83 @@
+﻿@page "/reportnhapkho/{PhieuNhap_ID}"
+@inject ChiTietPhieuNhap_Service chitietPhieuNhap_Service
+@inject PhieuNhap_Service phieuNhap_Service
+
+<PageTitle>Report Viewer</PageTitle>
+
+<ReportViewer ServiceUrl="/api/reports"
+              @bind-ReportSource="@ReportSource"
+              @bind-ScaleMode="@ScaleMode"
+              @bind-ViewMode="@ViewMode"
+              @bind-ParametersAreaVisible="@ParametersAreaVisible"
+              @bind-DocumentMapVisible="@DocumentMapVisible"
+              @bind-Scale="@Scale"
+              PageMode="@PageMode.ContinuousScroll"
+              PrintMode="@PrintMode.AutoSelect"
+              KeepClientAlive="true"
+              EnableSendEmail="true"
+              ServiceType="@ReportViewerServiceType.REST"
+              Height="900px"
+              Width="100%">
+
+</ReportViewer>
+
+@code {
+    public ScaleMode ScaleMode { get; set; } = ScaleMode.Specific;
+    public ViewMode ViewMode { get; set; } = ViewMode.Interactive;
+    public bool ParametersAreaVisible { get; set; }
+    public bool DocumentMapVisible { get; set; }
+    public double Scale { get; set; } = 1.0;
+
+    [Parameter]
+    public string PhieuNhap_ID { get; set; }
+    [Parameter]
+    public double SoTienBangChu { get; set; }
+
+    public ReportSourceOptions ReportSource { get; set; } = new ReportSourceOptions("ReportPhieuNhap_2.trdp", new Dictionary<string, object>());
+
+    protected override async Task OnInitializedAsync()
+    {
+        SoTienBangChu = await chitietPhieuNhap_Service.GetChiTietPhieuNhapsTotalByID(Int32.Parse(PhieuNhap_ID));
+        //var tenKho = await phieuNhap_Service.GetTenKhoByPhieuNhapId(Int32.Parse(PhieuNhap_ID));
+
+        ReportSource.Parameters.Add("SoPhieuNhapKho", PhieuNhap_ID);
+        ReportSource.Parameters.Add("SoPN", PhieuNhap_ID);
+        ReportSource.Parameters.Add("TenKho", "");
+        ReportSource.Parameters.Add("SoTien", chuyenSoSangChu(Math.Round(SoTienBangChu, 0)));
+    }
+
+    static string chuyenSoSangChu(double number)
+    {
+        if (number == 0)
+            return "Không";
+
+        string[] donVi = { "", "mươi", "trăm", "nghìn", "triệu", "tỷ" };
+        string[] so = { "không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín" };
+
+        string strNumber = number.ToString();
+        string result = "";
+
+        for (int i = 0; i < strNumber.Length; i++)
+        {
+            int num = int.Parse(strNumber[i].ToString());
+            int pos = strNumber.Length - i - 1;
+
+            if (num != 0)
+            {
+                if (num == 1 && (pos % 3 == 1 || pos == 0))
+                    result += "mười ";
+                else if (num == 5 && pos == 0)
+                    result += "lăm ";
+                else
+                    result += so[num] + " ";
+            }
+
+            if (pos % 3 != 0)
+                result += donVi[pos % 3] + " ";
+            else if (pos > 0)
+                result += donVi[3 + pos / 3] + " ";
+        }
+
+        return result.Trim();
+    }
+}

@@ -68,6 +68,26 @@ namespace QL_Kho.Service
             return false;
         }
 
+        public async Task<string> GetTenKhoByPhieuNhapId(int autoid)
+        {
+            var phieuNhap = await _dbconnect.XNK_NhapKho
+                .FirstOrDefaultAsync(pn => pn.AutoId == autoid && pn.IsDeleted == false);
+
+            if (phieuNhap != null)
+            {
+                var kho = await _dbconnect.DanhMucKho
+                    .FirstOrDefaultAsync(k => k.AutoId == phieuNhap.KhoId && k.IsDeleted == false);
+
+                if (kho != null)
+                {
+                    return kho.TenKho;
+                }
+            }
+
+            return "Kho không tồn tại";
+        }
+
+
         public async Task<bool> DeletePhieuNhap(XNK_NhapKho phieunhap)
         {
             var existingPN = _dbconnect.XNK_NhapKho.FirstOrDefault(pn => pn.AutoId == phieunhap.AutoId && pn.IsDeleted == false);

@@ -1,10 +1,31 @@
+using Telerik.Reporting.Cache.File;
+using Telerik.Reporting.Services;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.IO;
 using Blazored.Toast;
 using Microsoft.EntityFrameworkCore;
 using QL_Kho.Components;
 using QL_Kho.Models;
 using QL_Kho.Service;
 
+
+
+
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddRazorPages().AddNewtonsoftJson();
+builder.Services.AddControllers();
+builder.Services.AddMvc();
+builder.Services.TryAddSingleton<IReportServiceConfiguration>(sp => new ReportServiceConfiguration
+{
+	ReportingEngineConfiguration = sp.GetService<IConfiguration>(),
+	HostAppId = "QL_Kho",
+	Storage = new FileStorage(),
+	ReportSourceResolver = new UriReportSourceResolver(
+		System.IO.Path.Combine(GetReportsDir(sp)))
+});
+
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -25,6 +46,14 @@ builder.Services.AddBlazoredToast();
 
 var app = builder.Build();
 
+app.UseRouting();
+app.UseAntiforgery();
+app.UseAntiforgery();
+app.UseEndpoints(endpoints =>
+{
+	endpoints.MapControllers();
+	// ... 
+});
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -42,3 +71,8 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+
+static string GetReportsDir(IServiceProvider sp)
+{
+	return Path.Combine(sp.GetService<IWebHostEnvironment>().ContentRootPath, "Reports");
+}

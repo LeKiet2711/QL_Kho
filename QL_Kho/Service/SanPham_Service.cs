@@ -91,5 +91,11 @@ namespace QL_Kho.Service
             }
             return false;
         }
+
+        public string GetProductName(int sanPhamId)
+        {
+            var product = _dbconnect.DanhMucSanPham.FirstOrDefault(p => p.AutoId == sanPhamId);
+            return product.TenSanPham;
+        }
     }
 }

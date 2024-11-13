@@ -2,6 +2,7 @@
 @rendermode InteractiveServer
 @inject PhieuNhap_Service phieuNhap_Service
 @inject ChiTietPhieuNhap_Service chitietPhieuNhap_Service
+@inject SanPham_Service sanPham_Service
 @inject IToastService ToastService
 @inject NavigationManager Navigation
 
@@ -33,6 +34,9 @@ else
                 </GridCommandButton>
                 <GridCommandButton OnClick="() => ViewDetails((context as XNK_NhapKho).AutoId)">
                     <span class="oi oi-eye" Width="100px"></span> Xem chi tiết phiếu nhập
+                </GridCommandButton>
+                <GridCommandButton OnClick="() => ExportReport((context as XNK_NhapKho).AutoId.ToString())">
+                    <span class="oi oi-trash" Width="100px"></span> In phiếu nhập
                 </GridCommandButton>
             </GridCommandColumn>
         </GridColumns>
@@ -107,7 +111,7 @@ else
                         @foreach (XNK_NhapKhoRawData ct in lstCTPN)
                         {
                             <tr>
-                                <th>@ct.SanPhamId</th>
+                                <th>@(GetProductName(@ct.SanPhamId))</th>
                                 <th>@ct.SlNhap</th>
                                 <th>@ct.DonGiaNhap</th>
                                 <th>@(ct.SlNhap * ct.DonGiaNhap)</th>
@@ -430,5 +434,15 @@ else
     private void ViewDetails(int Auto_ID)
     {
         Navigation.NavigateTo($"/chitietphieunhap/{Auto_ID}");
+    }
+
+    private void ExportReport(string Auto_ID)
+    {
+        Navigation.NavigateTo($"/reportnhapkho/{Auto_ID}");
+    }
+
+    private string GetProductName(int sanPhamId)
+    {
+        return sanPham_Service.GetProductName(sanPhamId);
     }
 }
