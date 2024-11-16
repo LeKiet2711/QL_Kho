@@ -40,7 +40,9 @@ builder.Services.AddScoped<SanPham_Service>();
 builder.Services.AddScoped<Kho_Service>();
 builder.Services.AddScoped<NhaCungCap_Service>();
 builder.Services.AddScoped<PhieuNhap_Service>();
+builder.Services.AddScoped<PhieuXuat_Service>();
 builder.Services.AddScoped<ChiTietPhieuNhap_Service>();
+builder.Services.AddScoped<ChiTietPhieuXuat_Service>();
 
 builder.Services.AddBlazoredToast();
 
