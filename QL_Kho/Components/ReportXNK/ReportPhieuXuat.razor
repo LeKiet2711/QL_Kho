@@ -1,4 +1,4 @@
-﻿@page "/reportviewer"
+﻿@page "/reportxuatkho/{PhieuXuat_ID}"
 
 <PageTitle>Report Viewer</PageTitle>
 
@@ -35,8 +35,16 @@
     public bool DocumentMapVisible { get; set; }
     public double Scale { get; set; } = 1.0;
 
-    public ReportSourceOptions ReportSource { get; set; } = new ReportSourceOptions("SampleReport.trdp", new Dictionary<string, object>
+    [Parameter]
+    public string PhieuXuat_ID { get; set; }
+
+    public ReportSourceOptions ReportSource { get; set; } = new ReportSourceOptions("ReportPhieuXuat_2.trdp", new Dictionary<string, object>
     {
         // Add parameters if applicable
     });
+
+    protected override async Task OnInitializedAsync()
+    {
+        ReportSource.Parameters.Add("SoPhieuXuat", PhieuXuat_ID);
+    }
 }

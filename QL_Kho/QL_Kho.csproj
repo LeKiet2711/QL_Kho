@@ -8,14 +8,14 @@
 
   <ItemGroup>
     <None Remove="Reports\ReportPhieuNhap_2.trdp" />
-    <None Remove="Reports\SampleReport.trdp" />
+    <None Remove="Reports\ReportPhieuXuat_2.trdp" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Reports\ReportPhieuNhap_2.trdp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Reports\SampleReport.trdp">
+    <Content Include="Reports\ReportPhieuXuat_2.trdp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
