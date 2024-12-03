@@ -1,0 +1,64 @@
+﻿@page "/"
+@using QL_Kho.Components.Layout
+@layout LoginLayout
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+@inject QLNguoiDung_Service NguoiDungService
+@inject IToastService ToastService
+@inject NavigationManager Navigation
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<link href="css/styledangnhap.css" rel="stylesheet" />
+
+<PageTitle>Login</PageTitle>
+
+<div class="moi"></div>
+<div class="giua dangky">
+<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+        <div class="trentrai"></div>
+        @* <h1>Đăng nhập</h1> *@
+        <span style="font-size: 40px; font-weight: bold; display: block; text-align: center; width: 100%;">
+            Đăng
+            nhập
+        </span>
+        <InputText @bind-Value="loginModel.TenDangNhap" class="textbox custom-input" placeholder="Tên đăng nhập"></InputText>
+        <i class="fa-solid fa-user"></i>
+        <InputText @bind-Value="loginModel.MatKhau" class="textbox custom-input" type="password" placeholder="Mật khẩu"></InputText>
+        <i class="fa-solid fa-lock"></i>
+        <button type="submit" class="nut-dang-nhap ">Đăng nhập</button>
+        <div class="duoiphai"></div>
+</EditForm>
+    <div class="duoiphai"></div>
+</div>
+
+<div class="moi giua"></div>
+<div class="moi trai"></div>
+
+<div class="thanhlong"></div>
+<div class="thanhlong2"></div>
+
+
+<img class="nho" src="./images/decor-7-DjmEjkAr.png" alt="">
+<img class="nho giuan" src="./images/decor-7-DjmEjkAr.png" alt="">
+
+<img class="kich-thuoc" src="./images/duoi.png" alt="">
+
+@code {
+    private QlNguoiDung loginModel = new QlNguoiDung();
+
+    private async Task HandleLogin()
+    {
+        var user = await NguoiDungService.ValidateUserAsync(loginModel.TenDangNhap, loginModel.MatKhau);
+        if (user != null)
+        {
+            NguoiDungService.currentTenDangNhap = loginModel.TenDangNhap;
+            NguoiDungService.currentMatKhau = loginModel.MatKhau;
+            Navigation.NavigateTo("/Home");
+        }
+        else
+        {
+            ToastService.ShowError("Tên đăng nhập hoặc mật khẩu không chính xác vui lòng nhập lại !");
+        }
+    }
+}

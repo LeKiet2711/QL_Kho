@@ -16,7 +16,6 @@ namespace QL_Kho.Service
             return await _dbconnect.XNK_NhapKhoRawData.Where(ctpn=>ctpn.IsDeleted==false).ToListAsync();
         }
 
-
         public async Task<bool> AddChiTietPhieuNhap(XNK_NhapKhoRawData ctpn)
         {
            await _dbconnect.XNK_NhapKhoRawData.AddAsync(ctpn);

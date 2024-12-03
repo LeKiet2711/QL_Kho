@@ -1,6 +1,9 @@
 ﻿@layout TelerikLayout
 @inherits LayoutComponentBase
+@inject QLNguoiDung_Service NguoiDungService
+@inject NavigationManager Navigation
 @using Blazored.Toast.Configuration
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
 
 <BlazoredToasts Position="ToastPosition.BottomRight"
                 Timeout="3"
@@ -10,19 +13,21 @@
 
 <div class="page">
     <TelerikRootComponent>
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+        <div class="sidebar">
+            <NavMenu />
         </div>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+        <main>
+            <div class="top-row px-4">
+                <span>Xin chào, @currentUserName!</span>
+                <a href="/Home" class="btn btn-primary btn-ho-so ms-3">Hồ sơ</a>
+                <button @onclick="HandleLogout" class="btn btn-secondary btn-dang-xuat ms-2">Đăng xuất</button>
+            </div>
+
+            <article class="content px-4">
+                @Body
+            </article>
+        </main>
     </TelerikRootComponent>
 
 </div>
@@ -32,3 +37,30 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+@code {
+    private string currentUserName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            currentUserName = await sessionStorage.GetItemAsync<string>("currentUserName");
+            if (string.IsNullOrEmpty(currentUserName))
+            {
+                currentUserName = "Guest";
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Lỗi khi kết nối với user hiện hành: {ex.Message}");
+            currentUserName = "Guest";
+        }
+    }
+    private async Task HandleLogout()
+    {
+        await NguoiDungService.Logout();
+        Navigation.NavigateTo("/");
+        StateHasChanged();
+    }
+}
