@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using QL_Kho.Components;
 using QL_Kho.Models;
 using QL_Kho.Service;
+using Blazored.SessionStorage;
 
 
 
@@ -43,8 +44,11 @@ builder.Services.AddScoped<PhieuNhap_Service>();
 builder.Services.AddScoped<PhieuXuat_Service>();
 builder.Services.AddScoped<ChiTietPhieuNhap_Service>();
 builder.Services.AddScoped<ChiTietPhieuXuat_Service>();
+builder.Services.AddScoped<QLNguoiDung_Service>();
 
 builder.Services.AddBlazoredToast();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddBlazoredSessionStorage();
 
 var app = builder.Build();
 
