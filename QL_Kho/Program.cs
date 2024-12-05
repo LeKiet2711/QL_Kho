@@ -45,6 +45,8 @@ builder.Services.AddScoped<PhieuXuat_Service>();
 builder.Services.AddScoped<ChiTietPhieuNhap_Service>();
 builder.Services.AddScoped<ChiTietPhieuXuat_Service>();
 builder.Services.AddScoped<QLNguoiDung_Service>();
+builder.Services.AddScoped<TonKho_Service>(provider => new TonKho_Service("Data Source=KIETBANHTRAI\\SQLEXPRESS;Initial Catalog=QL_Kho;Integrated Security=True;"));
+
 
 builder.Services.AddBlazoredToast();
 builder.Services.AddHttpContextAccessor();
