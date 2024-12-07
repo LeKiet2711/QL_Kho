@@ -1,0 +1,203 @@
+﻿@page "/chitietphieuxuat/{ID:int}"
+@rendermode InteractiveServer
+@inject ChiTietPhieuXuat_Service chitietPhieuXuat_Service
+@inject PhieuXuat_Service phieuXuat_Service
+@inject IToastService ToastService
+@inject NavigationManager Navigation
+
+<style>
+    .modal {
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+</style>
+
+<h2 style="text-align:center;font-weight:bold">Chi tiết phiếu xuất kho @ID</h2>
+<button class="btn btn-success" @onclick="OpenAddModal" style="margin-bottom:10px">
+    <span class="oi oi-plus" aria-hidden="true">Thêm chi tiết phiếu xuất mới</span>
+</button>
+
+@if (dataList == null)
+{
+    <p><em>Loading......</em></p>
+}
+else
+{
+    <TelerikGrid Data="@dataList" Pageable="true" Sortable="true" Height="calc(100vh - 170px)" Resizable="true" Reorderable="true" Class="telerik-grid">
+        <GridColumns>
+            <GridColumn Field="SanPham.TenSanPham" Title="Sản phẩm" Width="100px" />
+            <GridColumn Field="@nameof(XNK_XuatKhoRawData.SlXuat)" Title="Số lượng xuất" Width="100px" />
+            <GridColumn Field="@nameof(XNK_XuatKhoRawData.DonGiaXuat)" Title="Đơn giá xuất" Width="100px" />
+
+            <GridCommandColumn Width="180px">
+                <GridCommandButton Command="Delete" OnClick="@DeleteItem">
+                    <span class="oi oi-trash" Width="100px"></span> Xóa
+                </GridCommandButton>
+            </GridCommandColumn>
+        </GridColumns>
+    </TelerikGrid>
+}
+
+<div class="modal fade @addModalClass" tabindex="-1" role="dialog" style="@addModalDisplayStyle">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#2f8f3a; color:#dedcd8">
+                <h5 class="modal-title"><b>Thêm chi tiết phiếu xuất</b></h5>
+                <button type="button" class="close" @onclick="CloseAddModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <EditForm Model="@chitietPhieuXuat" OnValidSubmit="createChiTietPhieuXuat">
+                    <div class="form-group">
+                        <label for="MaLo" class="control-label"><b>Mã sản phẩm: </b></label>
+                        <InputSelect class="form-control" @bind-Value="@chitietPhieuXuat.SanPhamId">
+                            <option value="">-- Chọn sản phẩm --</option>
+                            @foreach (var item in sanPhamList)
+                            {
+                                <option value="@item.AutoId">@item.TenSanPham</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div class="form-group">
+                        <label for="SoKg" class="control-label"><b>Số lượng: </b></label>
+                        <InputNumber class="form-control" @bind-Value="chitietPhieuXuat.SlXuat" />
+                        <ValidationMessage For="@(()=>chitietPhieuXuat.SlXuat)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="DonGia" class="control-label"><b>Đơn giá: </b></label>
+                        <InputNumber class="form-control" @bind-Value="chitietPhieuXuat.DonGiaXuat" />
+                        <ValidationMessage For="@(()=>chitietPhieuXuat.DonGiaXuat)" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Thêm chi tiết phiếu xuất</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseAddModal">Đóng</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade @deleteModalClass" tabindex="-1" role="dialog" style="@deleteModalDisplayStyle">
+    <div class="modal-dialog model-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#2f8f3a; color:beige">
+                <h5 class="modal-title"><b>Xóa phiếu xuất</b></h5>
+                <button type="button" class="close" @onclick="CloseDeleteModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background:#dedcd8; color:brown; font-size:30px">
+                <p style="color:red">Bạn có chắc chắn muốn xóa phiếu xuất này không?</p>
+                <EditForm Model="@chitietPhieuXuat" OnValidSubmit="deleteChiTietPhieuXuat">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <label for="ID" class="control-label">ID: </label>
+                        <label><b>@chitietPhieuXuat.AutoId</b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="MaSanPham" class="control-label">Mã sản phẩm: </label>
+                        <label><b>@chitietPhieuXuat.SanPhamId</b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="Soluong" class="control-label">Số lượng: </label>
+                        <label><b>@chitietPhieuXuat.SlXuat</b></label>
+                    </div>
+                    <div class="form-group">
+                        <label for="DonGia" class="control-label">Đơn giá xuất: </label>
+                        <label><b>@chitietPhieuXuat.DonGiaXuat</b></label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Xóa phiếu xuất</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseDeleteModal">Đóng</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int ID { get; set; }
+
+    public List<XNK_XuatKhoRawData> dataList = new List<XNK_XuatKhoRawData>();
+    private XNK_XuatKhoRawData chitietPhieuXuat = new XNK_XuatKhoRawData();
+    private List<DanhMucSanPham> sanPhamList = new List<DanhMucSanPham>();
+
+    private string addModalClass = "";
+    private string addModalDisplayStyle = "display:none";
+    private string deleteModalClass = "";
+    private string deleteModalDisplayStyle = "display:none";
+
+    protected override async Task OnInitializedAsync()
+    {
+        dataList = await chitietPhieuXuat_Service.GetChiTietByPhieuXuat(ID);
+        sanPhamList = await phieuXuat_Service.GetDanhMucSanPham();
+    }
+
+    private void OpenAddModal()
+    {
+        chitietPhieuXuat = new XNK_XuatKhoRawData();
+        addModalClass = "show";
+        addModalDisplayStyle = "display:block";
+    }
+
+    private void CloseAddModal()
+    {
+        addModalClass = "";
+        addModalDisplayStyle = "display:none";
+    }
+
+    private void OpenDeleteModal(XNK_XuatKhoRawData ctxDelete)
+    {
+        chitietPhieuXuat = ctxDelete;
+        deleteModalClass = "show";
+        deleteModalDisplayStyle = "display:block";
+    }
+
+    private void CloseDeleteModal()
+    {
+        deleteModalClass = "";
+        deleteModalDisplayStyle = "display:none";
+    }
+
+    private void DeleteItem(GridCommandEventArgs args)
+    {
+        var ctxDelete = (XNK_XuatKhoRawData)args.Item;
+        OpenDeleteModal(ctxDelete);
+    }
+
+    protected async Task createChiTietPhieuXuat()
+    {
+        try
+        {
+            chitietPhieuXuat.XuatKhoId = ID;
+            await chitietPhieuXuat_Service.AddChiTietPhieuXuat(chitietPhieuXuat);
+            dataList = await chitietPhieuXuat_Service.GetChiTietByPhieuXuat(ID);
+            CloseAddModal();
+            ToastService.ShowSuccess("Thêm chi tiết phiếu xuất thành công!");
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            ToastService.ShowError("Có lỗi xảy ra!");
+        }
+    }
+
+    protected async Task deleteChiTietPhieuXuat()
+    {
+        try
+        {
+            await chitietPhieuXuat_Service.DeleteChiTietPhieuXuatByXuatKho(chitietPhieuXuat.AutoId, ID);
+            dataList = await chitietPhieuXuat_Service.GetChiTietByPhieuXuat(ID);
+            CloseDeleteModal();
+            ToastService.ShowSuccess("Xóa chi tiết phiếu xuất thành công!");
+            StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            ToastService.ShowError("Có lỗi xảy ra!");
+        }
+    }
+}

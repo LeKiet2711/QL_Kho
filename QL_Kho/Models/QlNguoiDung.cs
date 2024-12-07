@@ -17,4 +17,8 @@ public partial class QlNguoiDung
     public string? MatKhau { get; set; }
 
     public int? TrangThai { get; set; }
+
+    [Column("email")]
+    [StringLength(100)]
+    public string? Email { get; set; }
 }

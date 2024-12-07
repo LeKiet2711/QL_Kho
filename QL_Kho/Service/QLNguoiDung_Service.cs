@@ -10,6 +10,7 @@ namespace QL_Kho.Service
         private readonly AppDbContext _context;
         private readonly ISessionStorageService _sessionStorage;
         public string currentTenDangNhap { get; set; }
+        public string currentTenDangNhap{ get; set; }
         public string currentMatKhau { get; set; }
         public QLNguoiDung_Service(AppDbContext context, ISessionStorageService sessionStorage)
         {

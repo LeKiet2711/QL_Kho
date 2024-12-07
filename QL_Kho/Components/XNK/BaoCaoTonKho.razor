@@ -1,0 +1,56 @@
+﻿@page "/baocaotonkho"
+@inject TonKho_Service tonKhoService
+@inject IToastService ToastService
+
+<h2 style="text-align:center;font-weight:bold">Báo cáo tồn kho</h2>
+
+<div class="form-group">
+    <label for="ngayNhap">Ngày nhập:</label>
+    <InputDate id="ngayNhap" class="form-control" @bind-Value="ngayNhap" />
+</div>
+<div class="form-group">
+    <label for="ngayXuat">Ngày xuất:</label>
+    <InputDate id="ngayXuat" class="form-control" @bind-Value="ngayXuat" />
+</div>
+<button class="btn btn-primary" @onclick="GenerateReport">Tạo báo cáo</button>
+
+@if (reportList == null)
+{
+    <p><em>Loading......</em></p>
+}
+else
+{
+    <TelerikGrid Data="@reportList" Pageable="true" Sortable="true" Height="calc(100vh - 170px)" Resizable="true" Reorderable="true" Class="telerik-grid">
+        <GridColumns>
+            <GridColumn Field="@nameof(TonKho.MaSanPham)" Title="Mã sản phẩm" Width="100px" />
+            <GridColumn Field="@nameof(TonKho.TenSanPham)" Title="Tên sản phẩm" Width="100px" />
+            <GridColumn Field="@nameof(TonKho.SLDauKy)" Title="Số lượng đầu kỳ" Width="100px" />
+            <GridColumn Field="@nameof(TonKho.SLNhap)" Title="Số lượng nhập" Width="100px" />
+            <GridColumn Field="@nameof(TonKho.SLXuat)" Title="Số lượng xuất" Width="100px" />
+            <GridColumn Field="@nameof(TonKho.SLCuoiKy)" Title="Số lượng cuối kỳ" Width="100px" />
+        </GridColumns>
+    </TelerikGrid>
+}
+
+@code {
+    private DateTime ngayNhap = DateTime.Now;
+    private DateTime ngayXuat = DateTime.Now;
+    private List<TonKho> reportList = new List<TonKho>();
+
+    private async Task GenerateReport()
+    {
+        try
+        {
+            reportList = await tonKhoService.BaoCaoTonKhoAsync(ngayNhap, ngayXuat);
+            if (reportList.Count == 0)
+            {
+                ToastService.ShowWarning("Không có dữ liệu cho khoảng thời gian này.");
+            }
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError("Có lỗi xảy ra khi tạo báo cáo.");
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+    }
+}
