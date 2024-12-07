@@ -1,0 +1,156 @@
+﻿@page "/phanquyenuser"
+@inject IToastService ToastService
+@inject NavigationManager Navigation
+@inject QLNguoiDung_Service nguoidung_Service
+@inject QLNguoiDungNhomNguoiDung_Service nhomquyen_Service
+@inject QlNguoiDung user
+
+<button class="" @onclick="OpenAddModal" style="margin-bottom:10px; position: relative;">
+    <span class="oi oi-plus" aria-hidden="true">Thêm</span>
+</button>
+
+<div class="modal fade @addModalClass" tabindex="-1" role="dialog" style="@addModalDisplayStyle">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background:#2f8f3a; color:beige">
+                <h5 class="modal-title"><b>Thêm User</b></h5>
+                <button type="button" class="close" @onclick="CloseAddModal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background:#e5d2b8; color:brown">
+                <EditForm Model="@userGet" OnValidSubmit="AddUserToNhomQuyen">
+                    <DataAnnotationsValidator />
+                    <div class="form-group">
+                        <label for="MaDangNhap" class="control-label"><b>Tên đăng nhập: </b></label>
+                        <InputSelect class="" @bind-Value="@userGet.TenDangNhap">
+                            <option value="">-- Chọn user --</option>
+                            @foreach (var item in ListNguoiDung)
+                            {
+                                <option value="@item.TenDangNhap">@item.TenDangNhap</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Thêm</button>
+                        <button type="button" class="btn btn-secondary" @onclick="CloseAddModal">Đóng</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+<TelerikComboBox Data="@ListNhomNguoiDung"
+                 Value="@id"
+                 Filterable="true"
+                 FilterOperator="@StringFilterOperator.Contains"
+                 ValueField="MaNhom"
+                 TextField="TenNhom"
+                 Placeholder="Chọn nhóm người dùng"
+                 Width="340px"
+                 ValueChanged="@(async (string args) => await ValueChanged(args))">
+    <ComboBoxSettings>
+        <ComboBoxPopupSettings Height="250px" MaxHeight="300px" MinHeight="75px" />
+    </ComboBoxSettings>
+</TelerikComboBox>
+
+<TelerikGrid Data="@ListNhomQuyen" Pageable="true" Sortable="true" Height="calc(100vh - 170px)" Resizable="true" Reorderable="true" Class="telerik-grid">
+    <GridColumns>
+        <GridColumn Field="TenDangNhap" Title="Mã đăng nhập" />
+        <GridColumn Field="MaNhomNguoiDung" Title="Nhóm người dùng" />
+        <GridColumn>
+            <Template>
+                <button class="btn btn-danger" @onclick="@(async () => await DeleteUserFromNhomQuyen((context as QlNguoiDungNhomNguoiDung).TenDangNhap))">Xóa</button>
+            </Template>
+        </GridColumn>
+    </GridColumns>
+</TelerikGrid>
+
+@code {
+    public List<QlNguoiDung> ListNguoiDung = new List<QlNguoiDung>();
+    public List<QlNhomNguoiDung> ListNhomNguoiDung = new List<QlNhomNguoiDung>();
+    public List<QlNguoiDungNhomNguoiDung> ListNhomQuyen = new List<QlNguoiDungNhomNguoiDung>();
+    QlNguoiDung userGet = new QlNguoiDung();
+    public string id;
+    private bool isInitialized = false;
+
+    private string addModalClass = "";
+    private string addModalDisplayStyle = "display:none";
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListNguoiDung = await nguoidung_Service.GetAllTenDangNhapAsync();
+        ListNhomNguoiDung = await nguoidung_Service.GetAllNhomNguoiDung();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !isInitialized)
+        {
+            user.TenDangNhap = await nguoidung_Service.GetCurrentUserName();
+            isInitialized = true;
+            StateHasChanged();
+        }
+    }
+
+    private async Task ValueChanged(string args)
+    {
+        id = args;
+        await LoadData(id);
+        await FilterUsers();
+    }
+
+    private async Task LoadData(string MaNhomQuyen)
+    {
+        ListNhomQuyen = await nhomquyen_Service.GetAllNhomQuyen(MaNhomQuyen);
+    }
+
+    private async Task FilterUsers()
+    {
+        var existingUsers = ListNhomQuyen.Select(q => q.TenDangNhap).ToList();
+        ListNguoiDung = await nguoidung_Service.GetAllTenDangNhapAsync();
+        ListNguoiDung = ListNguoiDung.Where(u => !existingUsers.Contains(u.TenDangNhap)).ToList();
+    }
+
+    private async Task DeleteUserFromNhomQuyen(string userId)
+    {
+        await nhomquyen_Service.DeleteUserFromNhomQuyen(userId, id);
+        await LoadData(id);
+        await FilterUsers();
+    }
+
+    private async Task AddUserToNhomQuyen()
+    {
+        if (!string.IsNullOrEmpty(userGet.TenDangNhap) && !string.IsNullOrEmpty(id))
+        {
+            var newUser = new QlNguoiDungNhomNguoiDung
+            {
+                TenDangNhap = userGet.TenDangNhap,
+                MaNhomNguoiDung = id
+            };
+            await nhomquyen_Service.AddUserToNhomQuyen(newUser);
+            await LoadData(id);
+            await FilterUsers();
+            CloseAddModal();
+            ToastService.ShowSuccess("Cấp quyền cho user thành công");
+        }
+        else
+        {
+            ToastService.ShowError("Vui lòng chọn user và nhóm người dùng");
+        }
+    }
+
+    private void OpenAddModal()
+    {
+        addModalClass = "show";
+        addModalDisplayStyle = "display:block";
+    }
+
+    private void CloseAddModal()
+    {
+        addModalClass = "";
+        addModalDisplayStyle = "display:none";
+        StateHasChanged();
+    }
+}

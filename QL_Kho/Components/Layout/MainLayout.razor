@@ -46,10 +46,6 @@
         try
         {
             currentUserName = await sessionStorage.GetItemAsync<string>("currentUserName");
-            if (string.IsNullOrEmpty(currentUserName))
-            {
-                currentUserName = "Guest";
-            }
         }
         catch (Exception ex)
         {

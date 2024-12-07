@@ -15,6 +15,8 @@ public partial class AppDbContext : DbContext
     {
     }
 
+    public virtual DbSet<AuthCode> AuthCodes { get; set; }
+
     public virtual DbSet<DmManHinh> DmManHinhs { get; set; }
 
     public virtual DbSet<QlNguoiDung> QlNguoiDungs { get; set; }
