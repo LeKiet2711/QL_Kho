@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using QL_Kho.Components.Layout
+
 @layout LoginLayout
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
@@ -26,7 +27,9 @@
         <i class="fa-solid fa-user"></i>
         <InputText @bind-Value="loginModel.MatKhau" class="textbox custom-input" type="password" placeholder="Mật khẩu"></InputText>
         <i class="fa-solid fa-lock"></i>
+      
         <button type="submit" class="nut-dang-nhap ">Đăng nhập</button>
+ 
         <div class="duoiphai"></div>
 </EditForm>
     <div class="duoiphai"></div>
@@ -54,7 +57,8 @@
         {
             NguoiDungService.currentTenDangNhap = loginModel.TenDangNhap;
             NguoiDungService.currentMatKhau = loginModel.MatKhau;
-            Navigation.NavigateTo("/Home");
+
+            Navigation.NavigateTo("/xacthuc");
         }
         else
         {

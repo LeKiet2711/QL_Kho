@@ -70,6 +70,7 @@ body {
 	filter: blur(100px);
 	position: absolute;
 	opacity: .7;
+	
 }
 
 .duoiphai {
@@ -193,6 +194,22 @@ input::placeholder {
 	position: absolute;
 	bottom: 70px;
 	left: 50%;
+	transform: translateX(-50%);
+	background: transparent;
+	border: 1px solid #00ffd6;
+	width: 200px;
+	height: 49px;
+	border-radius: 41px;
+	box-shadow: 2px 0px 15px #1bfff0;
+	color: #00ffd6;
+	font-weight: bold;
+}
+
+.nut-gui-ma {
+	position: absolute;
+	bottom: 70px;
+	left: 30%;
+
 	transform: translateX(-50%);
 	background: transparent;
 	border: 1px solid #00ffd6;
