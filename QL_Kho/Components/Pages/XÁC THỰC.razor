@@ -1,0 +1,77 @@
+﻿@page "/xacthuc"
+@using QL_Kho.Components.Layout
+@using Microsoft.EntityFrameworkCore;
+@layout LoginLayout
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+@inject QLNguoiDung_Service NguoiDungService
+@inject IToastService ToastService
+@inject NavigationManager Navigation
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@inject SendMail_Service SendMailService
+
+<link href="css/Xacthuc.css" rel="stylesheet" />
+<PageTitle>XacThuc</PageTitle>
+
+<div class="container">
+    <div class="content-box">
+       
+        <span class="title chu-dep">Xác Thực Người Dùng</span>
+     
+        <div class="input-section">
+            <label for="userKey">Nhập Mã:</label>
+            <input type="text" id="userKey" @bind="maxacthuc" class="input-key"/>
+
+            <button @onclick="XACTHUC" class="btn-validate">Kiểm tra</button>
+            <button @onclick="GUIMA" class="btn-validate">Lấy Mã</button>
+         
+        </div>
+    </div>
+</div>
+
+        <!-- Hiển thị thông báo -->
+      
+@code {
+    private string maxacthuc { get; set; } = "";
+    private async Task XACTHUC()
+    {
+        try
+        {
+            // Gọi phương thức VerifyAuthCodeAsync và kiểm tra kết quả trả về
+            var result = await SendMailService.VerifyAuthCodeAsync(maxacthuc);
+
+            if (result != null)
+            {
+                // Nếu mã hợp lệ, hiển thị thông báo thành công
+                ToastService.ShowSuccess("Xác thực thành công!");
+
+                // Điều hướng tới trang Home
+                Navigation.NavigateTo("/Home");
+            }
+            else
+            {
+                // Nếu mã không hợp lệ, hiển thị thông báo lỗi
+                ToastService.ShowError("Mã xác thực không hợp lệ!");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Nếu có lỗi xảy ra, hiển thị thông báo lỗi chi tiết
+            ToastService.ShowError($"Thất bại! Lỗi: {ex.Message}");
+        }
+    }
+
+
+    private async Task GUIMA()
+    {
+        try
+        {
+            var result = await SendMailService.SendAuthCodeByEmailAsync(NguoiDungService.currentTenDangNhap);
+            ToastService.ShowSuccess($"Gửi mã thành công ");
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError("Gửi mã không thành công!");
+        }
+    }
+}
