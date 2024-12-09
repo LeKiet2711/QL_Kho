@@ -3,6 +3,10 @@
 @attribute [StreamRendering]
 @inject QL_Kho.Service.Kho_Service KhoService
 @inject IToastService ToastService
+@inject QlNguoiDung user
+@inject QLNguoiDung_Service user_service
+@inject NavigationManager Navigation
+
 
 <h2 style="text-align:center;font-weight:bold">Danh mục kho</h2>
 <button class="btn btn-success" @onclick="OpenAddModal" style="margin-bottom:10px">
@@ -105,7 +109,7 @@ else
     </div>
 </div>
 
-@* <div class="modal fade @deleteModalClass" tabindex="-1" role="dialog" style="@deleteModalDisplayStyle">
+<div class="modal fade @deleteModalClass" tabindex="-1" role="dialog" style="@deleteModalDisplayStyle">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background:#2f8f3a; color:beige">
@@ -138,7 +142,7 @@ else
             </div>
         </div>
     </div>
-</div> *@
+</div>
 
 @code {
     private List<DanhMucKho> dataList = new List<DanhMucKho>();
@@ -158,7 +162,26 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        dataList = await KhoService.GetDanhMucKho();
+        try
+        {
+            user.TenDangNhap = await user_service.GetCurrentTenDangNhap();
+            if (user.TenDangNhap != "admin")
+            {
+                var userRole = await user_service.GetUserRole(user.TenDangNhap);
+                if (userRole != "1" && userRole != "2")
+                {
+                    Navigation.NavigateTo("/Error");
+                    return;
+                }
+            }
+
+            dataList = await KhoService.GetDanhMucKho();
+        }
+        catch (Exception e)
+        {
+            Navigation.NavigateTo("/Error");
+        }
+        
     }
 
     private void OpenAddModal()

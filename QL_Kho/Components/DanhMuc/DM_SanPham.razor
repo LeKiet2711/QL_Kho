@@ -3,6 +3,9 @@
 @attribute [StreamRendering]
 @inject SanPham_Service sanPham_Service
 @inject IToastService ToastService
+@inject QlNguoiDung user
+@inject QLNguoiDung_Service user_service
+@inject NavigationManager Navigation
 
 <h2 style="text-align:center;font-weight:bold">Danh mục sản phẩm</h2>
 <button class="btn btn-success" @onclick="OpenAddModal" style="margin-bottom:10px">
@@ -225,9 +228,27 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        dataList = await sanPham_Service.GetDanhMucSanPham();
+        try
+        {
+            user.TenDangNhap = await user_service.GetCurrentTenDangNhap();
+            if (user.TenDangNhap != "admin")
+            {
+                var userRole = await user_service.GetUserRole(user.TenDangNhap);
+                if (userRole != "1" && userRole != "2")
+                {
+                    Navigation.NavigateTo("/Error");
+                    return;
+                }
+            }
+            dataList = await sanPham_Service.GetDanhMucSanPham();
         dvtList = await sanPham_Service.GetDanhMucDonViTinh();
         lspList = await sanPham_Service.GetDanhMucLSP();
+        }
+        catch (Exception e)
+        {
+            Navigation.NavigateTo("/Error");
+        }
+        
     }
 
     private void OpenAddModal()

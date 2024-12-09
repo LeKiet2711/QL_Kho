@@ -88,7 +88,7 @@
     {
         if (firstRender && !isInitialized)
         {
-            user.TenDangNhap = await nguoidung_Service.GetCurrentUserName();
+            user.TenDangNhap = await nguoidung_Service.GetCurrentTenDangNhap();
             isInitialized = true;
             StateHasChanged();
         }
@@ -108,10 +108,14 @@
 
     private async Task FilterUsers()
     {
-        var existingUsers = ListNhomQuyen.Select(q => q.TenDangNhap).ToList();
+        var allAssignedUsers = await nhomquyen_Service.GetAllAssignedUsers();
+        var assignedUsernames = allAssignedUsers.Select(u => u.TenDangNhap).ToList();
         ListNguoiDung = await nguoidung_Service.GetAllTenDangNhapAsync();
-        ListNguoiDung = ListNguoiDung.Where(u => !existingUsers.Contains(u.TenDangNhap)).ToList();
+
+        // Loại bỏ những user đã được phân quyền
+        ListNguoiDung = ListNguoiDung.Where(u => !assignedUsernames.Contains(u.TenDangNhap)).ToList();
     }
+
 
     private async Task DeleteUserFromNhomQuyen(string userId)
     {

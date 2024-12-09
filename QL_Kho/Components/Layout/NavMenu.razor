@@ -1,4 +1,6 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inject QLNguoiDung_Service nguoidung_Service
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">QL_Kho</a>
     </div>
@@ -58,6 +60,29 @@
                 <span class="bi bi-houses-fill" aria-hidden="true"></span> Báo cáo tồn kho
             </NavLink>
         </div>
+        @if (currentTenDangNhap == "admin")
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="phanquyenuser">
+                    <span class="bi bi-houses-fill" aria-hidden="true"></span> Phân quyền User
+                </NavLink>
+            </div>
+        }
+
     </nav>
 </div>
 
+@code {
+    private string? currentTenDangNhap;
+    private bool isInitialized = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !isInitialized)
+        {
+            currentTenDangNhap = await nguoidung_Service.GetCurrentTenDangNhap();
+            StateHasChanged();
+            isInitialized = true;
+        }
+    }
+}

@@ -45,20 +45,23 @@
 <img class="kich-thuoc" src="./images/duoi.png" alt="">
 
 @code {
-    private QlNguoiDung loginModel = new QlNguoiDung();
+    @code {
+        private QlNguoiDung loginModel = new QlNguoiDung();
 
-    private async Task HandleLogin()
-    {
-        var user = await NguoiDungService.ValidateUserAsync(loginModel.TenDangNhap, loginModel.MatKhau);
-        if (user != null)
+        private async Task HandleLogin()
         {
-            NguoiDungService.currentTenDangNhap = loginModel.TenDangNhap;
-            NguoiDungService.currentMatKhau = loginModel.MatKhau;
-            Navigation.NavigateTo("/Home");
-        }
-        else
-        {
-            ToastService.ShowError("Tên đăng nhập hoặc mật khẩu không chính xác vui lòng nhập lại !");
+            var user = await NguoiDungService.ValidateUserAsync(loginModel.TenDangNhap, loginModel.MatKhau);
+            if (user != null)
+            {
+                NguoiDungService.currentTenDangNhap=loginModel.TenDangNhap;
+                NguoiDungService.currentMatKhau = loginModel.MatKhau;
+                Navigation.NavigateTo("/Home");
+            }
+            else
+            {
+                ToastService.ShowError("Tên đăng nhập hoặc mật khẩu không chính xác vui lòng nhập lại !");
+            }
         }
     }
+
 }

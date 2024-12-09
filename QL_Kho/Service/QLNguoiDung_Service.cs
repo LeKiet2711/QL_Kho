@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Blazored.SessionStorage;
 using Telerik.SvgIcons;
+using Microsoft.JSInterop;
 
 namespace QL_Kho.Service
 {
@@ -9,12 +10,14 @@ namespace QL_Kho.Service
     {
         private readonly AppDbContext _context;
         private readonly ISessionStorageService _sessionStorage;
+        private readonly IJSRuntime JSRuntime;
         public string currentTenDangNhap { get; set; }
         public string currentMatKhau { get; set; }
-        public QLNguoiDung_Service(AppDbContext context, ISessionStorageService sessionStorage)
+        public QLNguoiDung_Service(AppDbContext context, ISessionStorageService sessionStorage, IJSRuntime jSRuntime)
         {
             _context = context;
             _sessionStorage = sessionStorage;
+            JSRuntime = jSRuntime;
         }
 
         public async Task<QlNguoiDung?> ValidateUserAsync(string tenDangNhap, string matKhau)
@@ -25,9 +28,13 @@ namespace QL_Kho.Service
                 .FirstOrDefaultAsync(u => u.TenDangNhap == tenDangNhap && u.MatKhau == matKhau);
         }
 
-        public async Task<string> GetCurrentUserName()
+        public async Task<string> GetCurrentTenDangNhap()
         {
-            return await _sessionStorage.GetItemAsync<string>("currentUserName");
+            if (string.IsNullOrEmpty(currentTenDangNhap))
+            {
+                currentTenDangNhap = await _sessionStorage.GetItemAsync<string>("currentUserName");
+            }
+            return currentTenDangNhap;
         }
 
         public async Task<string> GetCurrentPassWord()
@@ -36,9 +43,9 @@ namespace QL_Kho.Service
         }
         public async Task Logout()
         {
-            string username = await _sessionStorage.GetItemAsync<string>("currentUserName");
             await _sessionStorage.RemoveItemAsync("currentUserName");
             await _sessionStorage.RemoveItemAsync("currentPassWord");
+            await JSRuntime.InvokeVoidAsync("localStorage.removeItem", "currentTenDangNhap");
             currentTenDangNhap = null;
             currentMatKhau = null;
         }
@@ -54,5 +61,17 @@ namespace QL_Kho.Service
             return await _context.QlNhomNguoiDungs
                 .ToListAsync();
         }
+
+        public async Task<string> GetUserRole(string tenDangNhap)
+        {
+            var userRole = await _context.QlNguoiDungNhomNguoiDungs
+                .Where(n => n.TenDangNhap == tenDangNhap)
+                .Select(n => n.MaNhomNguoiDung)
+                .FirstOrDefaultAsync();
+
+            return userRole;
+        }
+
+
     }
 }

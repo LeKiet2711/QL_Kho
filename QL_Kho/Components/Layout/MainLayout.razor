@@ -49,10 +49,10 @@
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Lỗi khi kết nối với user hiện hành: {ex.Message}");
             currentUserName = "Guest";
         }
     }
+
     private async Task HandleLogout()
     {
         await NguoiDungService.Logout();

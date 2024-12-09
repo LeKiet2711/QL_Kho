@@ -35,5 +35,10 @@ namespace QL_Kho.Service
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task<List<QlNguoiDungNhomNguoiDung>> GetAllAssignedUsers()
+        {
+            return await _context.QlNguoiDungNhomNguoiDungs.ToListAsync();
+        }
+
     }
 }

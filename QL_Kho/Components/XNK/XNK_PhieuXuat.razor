@@ -5,6 +5,8 @@
 @inject SanPham_Service sanPham_Service
 @inject IToastService ToastService
 @inject NavigationManager Navigation
+@inject QlNguoiDung user
+@inject QLNguoiDung_Service user_service
 
 <h2 style="text-align:center;font-weight:bold">Phiếu xuất kho</h2>
 <button class="btn btn-success" @onclick="OpenAddModal" style="margin-bottom:10px">
@@ -262,10 +264,28 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        dataList = await phieuXuat_Service.GetPhieuXuat();
+        try
+        {
+            user.TenDangNhap = await user_service.GetCurrentTenDangNhap();
+            if (user.TenDangNhap != "admin")
+            {
+                var userRole = await user_service.GetUserRole(user.TenDangNhap);
+                if (userRole != "1" && userRole != "2")
+                {
+                    Navigation.NavigateTo("/Error");
+                    return;
+                }
+            }
+            dataList = await phieuXuat_Service.GetPhieuXuat();
         nccList = await phieuXuat_Service.GetDanhMucNCC();
         khoList = await phieuXuat_Service.GetDanhMucKho();
         sanPhamList = await phieuXuat_Service.GetDanhMucSanPham();
+        }
+        catch (Exception e)
+        {
+            Navigation.NavigateTo("/Error");
+        }
+        
     }
 
     private void OpenAddModal()
