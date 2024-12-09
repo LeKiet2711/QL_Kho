@@ -20,11 +20,11 @@ public partial class XNK_XuatKho
 
     [Column("Kho_ID")]
     [Required(ErrorMessage = "Vui lòng chọn kho")]
-    public int KhoId { get; set; }
+    public int? KhoId { get; set; }
 
     [Column("Ngay_Xuat_Kho")]
     [Required(ErrorMessage = "Vui lòng không để trống ngày xuất")]
-    public DateOnly NgayXuatKho { get; set; }
+    public DateTime? NgayXuatKho { get; set; }
 
     [StringLength(255)]
     public string? GhiChu { get; set; }
