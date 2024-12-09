@@ -94,7 +94,7 @@ This section should list any major frameworks/libraries used to bootstrap your p
 
 <h1 id="feature">Cơ sở dữ liệu</h1>
 <p align="center">
-  <img src="[https://your-image-url-here.com](https://github.com/LeKiet2711/QL_Kho/blob/2ecae0eee885b4947c6f5f74e195de1f1919a7cd/database.png)" alt="Database Diagram" width="600">
+  ![image alt](https://github.com/LeKiet2711/QL_Kho/blob/2ecae0eee885b4947c6f5f74e195de1f1919a7cd/database.png)
 </p>
 <h2 id="assigntask">Phân công công việc</h2>
 
