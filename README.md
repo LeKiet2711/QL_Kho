@@ -3,17 +3,7 @@
 
 <img src="https://user-images.githubusercontent.com/73097560/115834477-dbab4500-a447-11eb-908a-139a6edaec5c.gif">
 
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<a id="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
---><!----  ---->
-  
-<!-- PROJECT LOGO -->
+
 <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
@@ -21,10 +11,7 @@
   </a>
 
   <p align="center">
-    Welcome to README introduce
-    <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Khám phá tài liệu »</strong></a>
-    <br />
+    Giới thiệu
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template">Xem demo</a>
   </p>
@@ -55,18 +42,13 @@
       <a href="#ai" style="color: green">Ứng dụng AI</a>
     </li>
     <li><a href="#usage">Cách dùng</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
 
 <!-- ABOUT THE PROJECT -->
 
-<h1 id="introduce">Gioi thieu</h1>
+<h1 id="introduce">Introduce</h1>
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
@@ -83,24 +65,10 @@
             <li>Tích hợp với các hệ thống khác: Kết nối với hệ thống kế toán, bán hàng để tạo ra một quy trình làm việc liền mạch.</li>
         </ul>
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### <img src="https://media.giphy.com/media/cj87CxfRtrUifF3Ryk/giphy.gif" width="25px" height="20px"> Installation
 
 
-<!-- CONTRIBUTING -->
-## Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
 
 
 <h1 id="member">Thành viên nhóm</h1>
@@ -122,7 +90,6 @@ This section should list any major frameworks/libraries used to bootstrap your p
 * ![Blazor Badge](https://img.shields.io/badge/Blazor-512BD4?logo=blazor&logoColor=fff&style=plastic)
 
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 <h1 id="feature">Chức năng</h1>
@@ -197,21 +164,143 @@ This section should list any major frameworks/libraries used to bootstrap your p
 
 <h2 id="assigntask">Phân công công việc</h2>
 
-<h2 id="ai">Ứng dụng AI</h2>
+<table align="center">
+  <tr>
+    <th>STT</th>
+    <th>Chức Năng (Website)</th>
+    <th></th>
+  </tr
+  <tr>
+    <td>1</td>
+    <td>Đăng nhập/Đăng kí</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Danh mục đơn vị tính</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>Danh mục sản phẩm</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>Danh mục kho</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>Phân quyền kho</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>Phiếu nhập</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>Chi tiết phiếu nhập</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>Phiếu xuất</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>Chi tiết phiếu xuất</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>Báo cáo chi tiết hàng nhập, hàng xuất (dựa vào khung thời gian)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td>Báo cáo xuất nhập tồn (dựa vào khung thời gian)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>12</td>
+    <td>Xuất báo cáo xuất nhập, xuất</td>
+    <td></td>
+  </tr>
+</table>
+<hr/>
 
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
+<table align="center">
+  <tr>
+    <th>STT</th>
+    <th>Chức Năng (Winform - App)</th>
+    <th></th>
+  </tr
+  <tr>
+    <td>1</td>
+    <td>Đăng nhập/Đăng kí</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>2</td>
+    <td>Danh mục đơn vị tính</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3</td>
+    <td>Danh mục sản phẩm</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>4</td>
+    <td>Danh mục kho</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>5</td>
+    <td>Phân quyền kho</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>6</td>
+    <td>Phiếu nhập</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>7</td>
+    <td>Chi tiết phiếu nhập</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>8</td>
+    <td>Phiếu xuất</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>9</td>
+    <td>Chi tiết phiếu xuất</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>10</td>
+    <td>Báo cáo chi tiết hàng nhập, hàng xuất (dựa vào khung thời gian)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>11</td>
+    <td>Báo cáo xuất nhập tồn (dựa vào khung thời gian)</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>12</td>
+    <td>Xuất báo cáo xuất nhập, xuất</td>
+    <td></td>
+  </tr>
+</table>
+<h2 id="ai">Ứng dụng AI - Chatbot AI</h2>
+<p><b>Chat bot cung cấp thông tin liên hệ, thông tin về phần mềm kho, cách sử công cụ.</b></p>
 
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
-
-* [Choose an Open Source License](https://choosealicense.com)
-* [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
-* [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
-* [Malven's Grid Cheatsheet](https://grid.malven.co/)
-* [Img Shields](https://shields.io)
-* [GitHub Pages](https://pages.github.com)
-* [Font Awesome](https://fontawesome.com)
-* [React Icons](https://react-icons.github.io/react-icons/search)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
