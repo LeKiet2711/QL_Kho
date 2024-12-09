@@ -92,7 +92,9 @@ This section should list any major frameworks/libraries used to bootstrap your p
 
 
 
-<h1 id="feature">Chức năng</h1>
+<h1 id="feature">Cơ sở dữ liệu</h1>
+
+
 
 <table align="center">
   <tr>
@@ -167,7 +169,7 @@ This section should list any major frameworks/libraries used to bootstrap your p
 <table align="center">
   <tr>
     <th>STT</th>
-    <th>Chức Năng (Website)</th>
+    <th>Chức Năng</th>
     <th></th>
   </tr
   <tr>
@@ -231,73 +233,89 @@ This section should list any major frameworks/libraries used to bootstrap your p
     <td></td>
   </tr>
 </table>
-<hr/>
+
+<h2 id="assigntask">Phân công công việc</h2>
 
 <table align="center">
   <tr>
     <th>STT</th>
-    <th>Chức Năng (Winform - App)</th>
+    <th>Chức Năng (Winform)</th>
     <th></th>
   </tr
   <tr>
     <td>1</td>
-    <td>Đăng nhập/Đăng kí</td>
-    <td></td>
+    <td>Đăng nhập</td>
+    <td>Quý</td>
   </tr>
   <tr>
     <td>2</td>
-    <td>Danh mục đơn vị tính</td>
-    <td></td>
+    <td>Xác thực người dùng</td>
+    <td>Quý</td>
   </tr>
   <tr>
     <td>3</td>
-    <td>Danh mục sản phẩm</td>
-    <td></td>
+    <td>Danh mục đơn vị tính</td>
+    <td>Quý</td>
   </tr>
   <tr>
     <td>4</td>
-    <td>Danh mục kho</td>
-    <td></td>
+    <td>Danh mục sản phẩm</td>
+    <td>Lộc</td>
   </tr>
   <tr>
     <td>5</td>
-    <td>Phân quyền kho</td>
-    <td></td>
+    <td>Danh mục loại sản phẩm</td>
+    <td>Lộc</td>
   </tr>
   <tr>
     <td>6</td>
-    <td>Phiếu nhập</td>
-    <td></td>
+    <td>Danh mục nhà cung cấp</td>
+    <td>Kiệt</td>
   </tr>
   <tr>
     <td>7</td>
-    <td>Chi tiết phiếu nhập</td>
-    <td></td>
+    <td>Danh mục kho</td>
+    <td>Kiệt</td>
   </tr>
   <tr>
     <td>8</td>
-    <td>Phiếu xuất</td>
-    <td></td>
+    <td>Phân quyền user</td>
+    <td>Lộc</td>
   </tr>
   <tr>
     <td>9</td>
-    <td>Chi tiết phiếu xuất</td>
-    <td></td>
+    <td>Phiếu nhập</td>
+    <td>Lộc</td>
   </tr>
   <tr>
     <td>10</td>
-    <td>Báo cáo chi tiết hàng nhập, hàng xuất (dựa vào khung thời gian)</td>
-    <td></td>
+    <td>Chi tiết phiếu nhập</td>
+    <td>Lộc</td>
   </tr>
   <tr>
     <td>11</td>
-    <td>Báo cáo xuất nhập tồn (dựa vào khung thời gian)</td>
-    <td></td>
+    <td>Phiếu xuất</td>
+    <td>Lộc</td>
   </tr>
   <tr>
     <td>12</td>
+    <td>Chi tiết phiếu xuất</td>
+    <td>Lộc</td>
+  </tr>
+  <tr>
+    <td>13</td>
+    <td>Báo cáo chi tiết hàng nhập, hàng xuất (dựa vào khung thời gian)</td>
+    <td>Lộc</td>
+  </tr>
+  <tr>
+    <td>14</td>
+    <td>Báo cáo xuất nhập tồn (dựa vào khung thời gian)</td>
+    <td>Lộc</td>
+  </tr>
+  <tr>
+    <td>15</td>
     <td>Xuất báo cáo xuất nhập, xuất</td>
-    <td></td>
+    <td>Lộc</td>
   </tr>
 </table>
 <h2 id="ai">Ứng dụng AI - Chatbot AI</h2>
