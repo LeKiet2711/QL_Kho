@@ -138,9 +138,7 @@ namespace QL_Kho.Service
 
             //// Trả về giá trị của tham số đầu ra
             //return Convert.ToInt32(resultParam.Value);
-            var ma = await _dbconnect.AuthCodes
-                          .Where(u => u.KeyValue == inputCode)
-                          .FirstOrDefaultAsync();
+            var ma = await _dbconnect.AuthCodes.Where(u => u.KeyValue == inputCode).FirstOrDefaultAsync();
             return ma?.KeyValue;
         }
 
