@@ -20,15 +20,15 @@ public partial class XNK_NhapKho
 
     [Column("Kho_ID")]
     [Required(ErrorMessage = "Vui lòng chọn kho")]
-    public int KhoId { get; set; }
+    public int? KhoId { get; set; }
 
     [Column("NCC_ID")]
     [Required(ErrorMessage = "Vui lòng chọn nhà cung cấp")]
-    public int NccId { get; set; }
+    public int? NccId { get; set; }
 
     [Column("Ngay_Nhap_Kho")]
     [Required(ErrorMessage = "Vui lòng không để trống ngày nhập")]
-    public DateOnly NgayNhapKho { get; set; }
+    public DateTime? NgayNhapKho { get; set; }
 
     [StringLength(255)]
     public string? GhiChu { get; set; }

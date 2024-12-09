@@ -142,7 +142,7 @@ input::placeholder {
 }*/
 
 .thanhlong {
-	background: url('../images/hai_trai_thanh_long.png');
+	background: url('../images/hop-carton-122.jpg');
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: contain;
@@ -156,7 +156,7 @@ input::placeholder {
 
 /*đường dẫn là tương đối và không dùng được thuộc tính viết tắt*/
 .thanhlong2 {
-	background: url('../images/hai_trai_thanh_long.png');
+	background: url('../images/hop-carton-122.jpg');
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: contain;

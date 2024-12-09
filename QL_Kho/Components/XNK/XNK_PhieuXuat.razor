@@ -270,16 +270,16 @@ else
             if (user.TenDangNhap != "admin")
             {
                 var userRole = await user_service.GetUserRole(user.TenDangNhap);
-                if (userRole != "1" && userRole != "2")
+                if (userRole != "1")
                 {
                     Navigation.NavigateTo("/Error");
                     return;
                 }
             }
             dataList = await phieuXuat_Service.GetPhieuXuat();
-        nccList = await phieuXuat_Service.GetDanhMucNCC();
-        khoList = await phieuXuat_Service.GetDanhMucKho();
-        sanPhamList = await phieuXuat_Service.GetDanhMucSanPham();
+            nccList = await phieuXuat_Service.GetDanhMucNCC();
+            khoList = await phieuXuat_Service.GetDanhMucKho();
+            sanPhamList = await phieuXuat_Service.GetDanhMucSanPham();
         }
         catch (Exception e)
         {

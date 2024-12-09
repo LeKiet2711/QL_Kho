@@ -90,7 +90,7 @@ else
                     
                     <div class="form-group">
                         <label for="NgayNhapKho" class="control-label"><b>Ngày nhập kho: </b></label>
-                        <InputDate class="form-control" @bind-Value=@phieuNhap.NgayNhapKho />
+                        <InputDate class="form-control" @bind-Value=@phieuNhap.NgayNhapKho format="dd/MM/yyyy"/>    
                         <ValidationMessage For="@(() => phieuNhap.NgayNhapKho)" />
                     </div>
                     <div class="form-group">
@@ -157,7 +157,7 @@ else
                                 <option value="@item.AutoId">@item.MaNcc - @item.TenNcc</option>
                             }
                         </InputSelect>
-                        <ValidationMessage For="@(()=>phieuNhap.NccId)" />
+                        <ValidationMessage For="@(() => phieuNhap.NccId)" />
                     </div>
 
                     <div class="form-group">
@@ -169,12 +169,13 @@ else
                                 <option value="@item.AutoId">@item.MaKho - @item.TenKho</option>
                             }
                         </InputSelect>
-                        <ValidationMessage For="@(()=>phieuNhap.KhoId)" />
+                        <ValidationMessage For="@(() => phieuNhap.KhoId)" />
                     </div>
+
 
                     <div class="form-group">
                         <label for="NgayNhapKho" class="control-label"><b>Ngày nhập kho: </b></label>
-                        <InputDate class="form-control" @bind-Value=@phieuNhap.NgayNhapKho />
+                        <InputDate class="form-control" @bind-Value=@phieuNhap.NgayNhapKho format="dd/MM/yyyy" />
                         <ValidationMessage For="@(() => phieuNhap.NgayNhapKho)" />
                     </div>
                     <div class="form-group">
@@ -246,6 +247,7 @@ else
                     <div class="form-group">
                         <label for="SoPhieuNhap" class="control-label">Số phiếu nhập: </label>
                         <label><b>@phieuNhap.SoPhieuNhap</b></label>
+
                     </div>
                     <div class="form-group">
                         <label for="TenKho" class="control-label">Nhà cung cấp: </label>
@@ -294,6 +296,8 @@ else
     private string addChiTietModalClass = "";
     private string addChiTietModalDisplayStyle = "display:none";
 
+    private string soPhieuNhap;
+
     protected override async Task OnInitializedAsync()
     {
         try
@@ -302,7 +306,7 @@ else
             if (user.TenDangNhap != "admin")
             {
                 var userRole = await user_service.GetUserRole(user.TenDangNhap);
-                if (userRole != "1" && userRole != "2")
+                if (userRole != "1")
                 {
                     Navigation.NavigateTo("/Error");
                     return;
@@ -336,6 +340,7 @@ else
     private void OpenEditModal(XNK_NhapKho phieuNhapToEdit)
     {
         phieuNhap = phieuNhapToEdit;
+        soPhieuNhap=phieuNhap.SoPhieuNhap;
         editModalClass = "show";
         editModalDisplayStyle = "display:block";
     }
@@ -411,8 +416,12 @@ else
 
     private async Task updatePhieuNhap()
     {
-        var result = await phieuNhap_Service.UpdatePhieuNhap(phieuNhap);
-        if (result)
+        if (await phieuNhap_Service.IsSoPhieuNhapExists(phieuNhap.SoPhieuNhap, soPhieuNhap))
+        {
+            ToastService.ShowError("Số phiếu nhập đã tồn tại!");
+            return;
+        }
+        if (await phieuNhap_Service.UpdatePhieuNhap(phieuNhap))
         {
             ToastService.ShowSuccess("Cập nhật phiếu nhập thành công!");
             dataList = await phieuNhap_Service.GetPhieuNhap();
