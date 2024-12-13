@@ -54,28 +54,36 @@ public partial class AppDbContext : DbContext
         modelBuilder.Entity<DmManHinh>(entity =>
         {
             entity.HasKey(e => e.MaManHinh).HasName("PK__DM_ManHi__D84939226E911284");
+
+            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
         });
 
         modelBuilder.Entity<QlNguoiDung>(entity =>
         {
             entity.HasKey(e => e.TenDangNhap).HasName("PK__QL_Nguoi__55F68FC105E85A2F");
 
+            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
             entity.Property(e => e.TrangThai).HasDefaultValue(0);
         });
 
         modelBuilder.Entity<QlNguoiDungNhomNguoiDung>(entity =>
         {
             entity.HasKey(e => new { e.TenDangNhap, e.MaNhomNguoiDung }).HasName("PK__QL_Nguoi__77F599D89FC2BC76");
+
+            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
         });
 
         modelBuilder.Entity<QlNhomNguoiDung>(entity =>
         {
             entity.HasKey(e => e.MaNhom).HasName("PK__QL_NhomN__234F91CD04A553B3");
+
+            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
         });
 
         modelBuilder.Entity<QlPhanQuyen>(entity =>
         {
             entity.Property(e => e.CoQuyen).HasDefaultValue(0);
+            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
         });
 
         modelBuilder.Entity<DanhMucDonViTinh>(entity =>
@@ -122,6 +130,7 @@ public partial class AppDbContext : DbContext
             entity.HasKey(e => e.AutoId).HasName("PK__tbl_XNK___F82B882382A3EEB3");
 
             entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+            entity.Property(e => e.TrangThai).HasDefaultValue(0);
 
             entity.HasOne(d => d.Kho).WithMany(p => p.TblXnkNhapKhos).HasConstraintName("FK__tbl_XNK_N__Kho_I__48CFD27E");
 
@@ -144,6 +153,7 @@ public partial class AppDbContext : DbContext
             entity.HasKey(e => e.AutoId).HasName("PK__tbl_XNK___F82B8823B1F907C0");
 
             entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+            entity.Property(e => e.TrangThai).HasDefaultValue(0);
 
             entity.HasOne(d => d.Kho).WithMany(p => p.TblXnkXuatKhos).HasConstraintName("FK__tbl_XNK_X__Kho_I__52593CB8");
         });

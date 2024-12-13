@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using QL_Kho.AI;
 using QL_Kho.Models;
 
 namespace QL_Kho.Service
@@ -67,6 +68,19 @@ namespace QL_Kho.Service
                                                    .Where(x => x.XuatKhoId == id)
                                                    .SumAsync(x => x.DonGiaXuat * x.SlXuat);
             return (double)chitietPhieuXuats;
+        }
+
+        public async Task<List<XuatKhoData>> GetTrainingData()
+        {
+            return await (from ctpx in _dbconnect.XNK_XuatKhoRawData
+                          join px in _dbconnect.XNK_XuatKho on ctpx.XuatKhoId equals px.AutoId
+                          where ctpx.IsDeleted == false && px.IsDeleted == false
+                          select new XuatKhoData
+                          {
+                              SlXuat = (float)ctpx.SlXuat,
+                              DonGiaXuat = (float)ctpx.DonGiaXuat,
+                              NgayXuatKho = px.NgayXuatKho.HasValue ? (float)(px.NgayXuatKho.Value - new DateTime(1970, 1, 1)).TotalDays : 0,
+                          }).ToListAsync();
         }
 
     }

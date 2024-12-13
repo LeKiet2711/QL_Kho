@@ -17,4 +17,7 @@ public partial class QlPhanQuyen
     public string? MaManHinh { get; set; }
 
     public int? CoQuyen { get; set; }
+
+    [Column("isDeleted")]
+    public bool? IsDeleted { get; set; }
 }

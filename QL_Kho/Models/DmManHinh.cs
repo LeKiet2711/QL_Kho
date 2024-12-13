@@ -15,4 +15,7 @@ public partial class DmManHinh
 
     [StringLength(100)]
     public string? TenManHinh { get; set; }
+
+    [Column("isDeleted")]
+    public bool? IsDeleted { get; set; }
 }

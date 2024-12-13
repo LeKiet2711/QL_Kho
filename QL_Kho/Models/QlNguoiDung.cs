@@ -21,4 +21,7 @@ public partial class QlNguoiDung
     [Column("email")]
     [StringLength(100)]
     public string? Email { get; set; }
+
+    [Column("isDeleted")]
+    public bool? IsDeleted { get; set; }
 }

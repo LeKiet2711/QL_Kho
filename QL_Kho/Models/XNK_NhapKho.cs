@@ -33,6 +33,8 @@ public partial class XNK_NhapKho
     [StringLength(255)]
     public string? GhiChu { get; set; }
 
+    [Column("TrangThai")]
+    public int? TrangThai { get; set; }
     [Column("isDeleted")]
     public bool IsDeleted { get; set; }
 

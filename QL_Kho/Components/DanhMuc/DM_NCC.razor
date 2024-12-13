@@ -13,11 +13,9 @@
 </button>
 
 @if (dataList == null)
-
 {
     <p><em>Loading......</em></p>
 }
-
 else
 {
     <TelerikGrid Data="@dataList" Pageable="true" Sortable="true" Height="calc(100vh - 170px)" Resizable="true" Reorderable="true" Class="telerik-grid">

@@ -20,4 +20,7 @@ public partial class QlNguoiDungNhomNguoiDung
 
     [StringLength(100)]
     public string? GhiChu { get; set; }
+
+    [Column("isDeleted")]
+    public bool? IsDeleted { get; set; }
 }

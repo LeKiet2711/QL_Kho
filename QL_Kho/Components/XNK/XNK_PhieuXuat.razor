@@ -250,8 +250,9 @@ else
     private List<DanhMucNCC> nccList = new List<DanhMucNCC>();
     private List<DanhMucKho> khoList = new List<DanhMucKho>();
     private List<DanhMucSanPham> sanPhamList = new List<DanhMucSanPham>();
-
     private XNK_XuatKhoRawData newChiTiet = new XNK_XuatKhoRawData();
+
+    private ML_Machine mlMachine = new ML_Machine();
 
     private string addModalClass = "";
     private string addModalDisplayStyle = "display:none";
@@ -280,12 +281,16 @@ else
             nccList = await phieuXuat_Service.GetDanhMucNCC();
             khoList = await phieuXuat_Service.GetDanhMucKho();
             sanPhamList = await phieuXuat_Service.GetDanhMucSanPham();
+
+            //mlMachine.PrintTrainingData();
+            //var trainingData = await chitietPhieuXuat_Service.GetTrainingData();
+            mlMachine.TrainModel();
         }
         catch (Exception e)
         {
             Navigation.NavigateTo("/Error");
         }
-        
+
     }
 
     private void OpenAddModal()
@@ -355,26 +360,40 @@ else
 
     private async Task createPhieuXuat()
     {
-        if (await phieuXuat_Service.IsSoPhieuXuatExists(phieuXuat.SoPhieuXuat, "SQLDEVELOPER"))
+        bool isFraud = mlMachine.Predict(new XuatKhoData
+            {
+                SlXuat = (float)newChiTiet.SlXuat,
+                DonGiaXuat = (float)newChiTiet.DonGiaXuat,
+                NgayXuatKho = phieuXuat.NgayXuatKho.HasValue ? (float)(phieuXuat.NgayXuatKho.Value - new DateTime(1970, 1, 1)).TotalDays : 0
+            });
+        if (isFraud)
         {
-            ToastService.ShowError("Số phiếu xuất đã tồn tại!");
+            ToastService.ShowError("Phát hiện gian lận!");
             return;
         }
-        if (await phieuXuat_Service.AddPhieuXuat(phieuXuat))
+        try
         {
-            foreach (XNK_XuatKhoRawData ctpx in lstCTPX)
+            if (await phieuXuat_Service.IsSoPhieuXuatExists(phieuXuat.SoPhieuXuat, "SQLDEVELOPER"))
             {
-                ctpx.XuatKhoId = phieuXuat.AutoId;
-                await chitietPhieuXuat_Service.AddChiTietPhieuXuat(ctpx);
+                ToastService.ShowError("Số phiếu xuất đã tồn tại!");
+                return;
             }
-            ToastService.ShowSuccess("Thêm phiếu xuất thành công!");
-            dataList = await phieuXuat_Service.GetPhieuXuat();
-            CloseAddModal();
+            if (await phieuXuat_Service.AddPhieuXuat(phieuXuat))
+            {
+                foreach (XNK_XuatKhoRawData ctpx in lstCTPX)
+                {
+                    ctpx.XuatKhoId = phieuXuat.AutoId;
+                    await chitietPhieuXuat_Service.AddChiTietPhieuXuat(ctpx);
+                }
+                ToastService.ShowSuccess("Thêm phiếu xuất thành công!");
+                dataList = await phieuXuat_Service.GetPhieuXuat();
+                CloseAddModal();
+            }
+        }catch(Exception e){
+            Console.WriteLine(e.Message);
+            ToastService.ShowError("Tạo phiếu xuất thất bại");
         }
-        else
-        {
-            ToastService.ShowError("Thêm phiếu xuất thất bại!");
-        }
+
     }
 
     private async Task updatePhieuXuat()

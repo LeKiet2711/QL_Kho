@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="AI\ML_Machine.cs" />
     <Content Include="Reports\ReportPhieuNhap_2.trdp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -23,6 +24,7 @@
   <ItemGroup>
     <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
     <PackageReference Include="Blazored.Toast" Version="4.2.1" />
+    <PackageReference Include="CsvHelper" Version="33.0.1" />
     <PackageReference Include="iTextSharp" Version="5.5.13.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
@@ -34,10 +36,17 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.ML" Version="4.0.0" />
+    <PackageReference Include="Microsoft.ML.FastTree" Version="4.0.0" />
     <PackageReference Include="Telerik.Reporting.OpenXmlRendering" Version="18.0.24.305" />
     <PackageReference Include="Telerik.Reporting.Services.AspNetCore" Version="18.0.24.305" />
     <PackageReference Include="Telerik.ReportViewer.BlazorNative" Version="18.0.24.305" />
     <PackageReference Include="Telerik.UI.for.Blazor" Version="5.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Components\AI_UI\" />
+    <Folder Include="wwwroot\CSVData\" />
   </ItemGroup>
 
 </Project>
