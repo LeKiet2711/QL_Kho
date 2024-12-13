@@ -111,35 +111,33 @@ namespace QL_Kho.Service
         }
         public async Task<string> VerifyAuthCodeAsync(string inputCode)
         {
-            //using var connection = _dbconnect.Database.GetDbConnection();
-            //await connection.OpenAsync();
+            if (string.IsNullOrEmpty(inputCode))
+            {
+                return "Invalid code. Please try again.";
+            }
 
-            //using var command = connection.CreateCommand();
-            //command.CommandText = "KiemtraKhoa"; // Tên thủ tục
-            //command.CommandType = CommandType.StoredProcedure; // Kiểu thủ tục lưu trữ
+            try
+            {
+                
+                using (var context = new AppDbContext())
+                {
+                  
+                    var authCode = await context.AuthCodes
+                        .FirstOrDefaultAsync(code => code.KeyValue == inputCode);
 
-            //// Thêm tham số đầu vào @inputCode
-            //var inputCodeParam = command.CreateParameter();
-            //inputCodeParam.ParameterName = "@inputCode";
-            //inputCodeParam.DbType = DbType.String;
-            //inputCodeParam.Size = 100;
-            //inputCodeParam.Value = inputCode; // Giá trị của mã xác thực
-            //command.Parameters.Add(inputCodeParam);
-
-            //// Thực thi thủ tục và lấy kết quả
-            //var resultParam = command.CreateParameter();
-            //resultParam.ParameterName = "@IsValid"; // Tên tham số đầu ra
-            //resultParam.DbType = DbType.Int32;
-            //resultParam.Direction = ParameterDirection.Output;
-            //command.Parameters.Add(resultParam);
-
-            //// Thực thi thủ tục
-            //await command.ExecuteNonQueryAsync();
-
-            //// Trả về giá trị của tham số đầu ra
-            //return Convert.ToInt32(resultParam.Value);
-            var ma = await _dbconnect.AuthCodes.Where(u => u.KeyValue == inputCode).FirstOrDefaultAsync();
-            return ma?.KeyValue;
+                    if (authCode == null)
+                    {
+                        return null;
+                    }
+                    // Nếu mã hợp lệ
+                    return "true";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Xử lý lỗi nếu có
+                return $"An error occurred: {ex.Message}";
+            }
         }
 
 

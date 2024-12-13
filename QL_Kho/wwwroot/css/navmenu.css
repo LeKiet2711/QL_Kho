@@ -11,7 +11,7 @@
 .bi-shop,
 .bi-person-lines-fill,
 .bi-box-seam-fill {
-    font-size: 1.5rem; /* Thay đổi kích thước của tất cả các biểu tượng */
+    font-size: 1.5rem;  Thay đổi kích thước của tất cả các biểu tượng 
     position: relative;
-    top: -13px; /* Điều chỉnh khoảng cách trên cho tất cả các biểu tượng */
+    top: -13px;  Điều chỉnh khoảng cách trên cho tất cả các biểu tượng 
 }
