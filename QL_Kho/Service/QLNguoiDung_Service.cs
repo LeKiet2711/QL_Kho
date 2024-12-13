@@ -8,11 +8,14 @@ namespace QL_Kho.Service
 {
     public class QLNguoiDung_Service
     {
+        private readonly PasswordService _passwordService;
         private readonly AppDbContext _context;
         private readonly ISessionStorageService _sessionStorage;
         private readonly IJSRuntime JSRuntime;
         public string currentTenDangNhap { get; set; }
         public string currentMatKhau { get; set; }
+        [ActivatorUtilitiesConstructor]
+   
         public QLNguoiDung_Service(AppDbContext context, ISessionStorageService sessionStorage, IJSRuntime jSRuntime)
         {
             _context = context;
@@ -35,6 +38,14 @@ namespace QL_Kho.Service
                 currentTenDangNhap = await _sessionStorage.GetItemAsync<string>("currentUserName");
             }
             return currentTenDangNhap;
+        }
+        public async Task<string> GetCurrentPassword()
+        {
+            if (string.IsNullOrEmpty(currentMatKhau))
+            {
+                currentMatKhau = await _sessionStorage.GetItemAsync<string>("currentPassWord");
+            }
+            return currentMatKhau;
         }
 
         public async Task<string> GetCurrentPassWord()
@@ -72,6 +83,17 @@ namespace QL_Kho.Service
             return userRole;
         }
 
+       
 
+        //public async Task<bool> ChangePassword(string userName, string newPassword)
+        //{
+        //    var user = new QlNguoiDung
+        //    {
+        //        TenDangNhap = userName,
+        //        MatKhau = newPassword
+        //    };
+
+        //    return await _passwordService.UpdataTTnguoidung(user);
+        //}
     }
 }

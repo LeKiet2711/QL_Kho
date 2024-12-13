@@ -1,0 +1,153 @@
+﻿@page "/hoso"
+@using QL_Kho.Components.Layout
+
+@layout LoginLayout
+@inject QLNguoiDung_Service NguoiDungService
+@inject PasswordService _passservice
+@inject IToastService ToastService
+@inject NavigationManager Navigation
+@using Blazored.Toast.Configuration
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+<link href="css/hoso.css" rel="stylesheet" />
+<div class="container">
+  
+    <div class="modal">
+        
+        <div class="modal-content">
+            <h2>Thông Tin Người Dùng</h2>
+            <div class="info">
+                <p><strong>Tên Tài Khoản:</strong> @currentUserName</p>
+            </div>
+            <button class="btn" @onclick="ShowChangePasswordModal">Thay Đổi Mật Khẩu</button>
+            <button class="btn" @onclick="back">Quay Lại</button>  <!-- Nút quay lại -->
+        </div>
+    </div>
+
+
+
+
+    <!-- Modal for changing password -->
+    @if (showPasswordModal)
+    {
+        <div class="modal">
+            <div class="modal-content">
+                <span class="close" @onclick="CloseModal">&times;</span>
+                <h3>Thay Đổi Mật Khẩu</h3>
+
+                <div class="form-group">
+                    <label for="current-password">Mật khẩu cũ:</label>
+                    <InputText id="current-password" @bind-Value="currentPassword" class="form-control" type="password" placeholder="Nhập mật khẩu cũ" />
+                </div>
+                <div class="form-group">
+                    <label for="new-password">Mật khẩu mới:</label>
+                    <InputText id="new-password" @bind-Value="newPassword" class="form-control" type="password" placeholder="Nhập mật khẩu mới" />
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Xác nhận mật khẩu mới:</label>
+                    <InputText id="confirm-password" @bind-Value="confirmPassword" class="form-control" type="password" placeholder="Xác nhận mật khẩu mới" />
+                </div>
+
+                <button class="btn" @onclick="ChangePassword">Lưu Mật Khẩu</button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private string currentUserName;
+    private string currentPassword;
+    private string currentPassword1;
+    private string newPassword ="";
+    private string confirmPassword="";
+
+
+    private bool showPasswordModal = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            currentUserName = await sessionStorage.GetItemAsync<string>("currentUserName");
+            currentPassword1 = await sessionStorage.GetItemAsync<string>("currentPassWord");
+        }
+        catch (Exception ex)
+        {
+            currentUserName = "Guest";
+        }
+    }
+    private bool showModal = false;
+
+
+    private void back()
+    {
+        Navigation.NavigateTo("/home");
+    }
+
+    // Hàm hiển thị modal
+    private void ShowChangePasswordModal()
+    {
+        showPasswordModal = true;
+    }
+
+    private void CloseModal()
+    {
+        showPasswordModal = false;
+    }
+
+    private async Task ChangePassword()
+    {
+        try
+        {
+            if (newPassword != confirmPassword)
+            {
+                // Thông báo lỗi nếu mật khẩu mới và xác nhận không khớp
+                ToastService.ShowError("Mật khẩu mới và xác nhận mật khẩu không khớp!");
+                return;
+            }
+            else
+            {
+                if (currentPassword == newPassword)
+                {
+                    ToastService.ShowError("Mật khẩu mới không được trùng với mật khẩu hiện tại!");
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(currentPassword) || string.IsNullOrEmpty(confirmPassword))
+                    {
+                        ToastService.ShowError("Vui lòng điền đầy đủ thông tin");
+                    }
+                    else
+                    {
+                        if(currentPassword != currentPassword1)
+                        {
+                            ToastService.ShowError("Mật khẩu hiện tại không đúng");
+                        }
+                        else
+                        {
+                            var result = await _passservice.UpdataTTnguoidung(currentUserName, newPassword);
+
+                            if (result)
+                            {
+                                ToastService.ShowSuccess("Thay đổi mật khẩu thành công!");
+                                CloseModal();
+                                Console.WriteLine("Vui long đăng nhập lại hệ thống");
+                            }
+                            else
+                            {
+                                ToastService.ShowError("Thay đổi mật khẩu thất bại!");
+                            }
+                        }
+                    }
+                }
+            }
+            Navigation.NavigateTo("/");
+
+        }
+        catch
+        {
+            ToastService.ShowError("lỗi");
+        }
+
+      
+    }
+}
