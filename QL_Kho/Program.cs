@@ -34,6 +34,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<PasswordService>();
 builder.Services.AddScoped<SendMail_Service>();
 builder.Services.AddScoped<DonViTinh_Service>();
 builder.Services.AddScoped<LoaiSanPham_Service>();
