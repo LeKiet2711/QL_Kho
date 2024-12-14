@@ -1,0 +1,83 @@
+﻿@page "/chatwithai"
+@inject HttpClient Http
+
+<h3>Chat with AI</h3>
+
+<div class="chat-container">
+    <textarea id="chatInput" placeholder="Ask a question..." @bind="userInput"></textarea>
+    <button id="sendButton" @onclick="SendQuestion">Send</button>
+</div>
+
+<div>
+    <h4>Response:</h4>
+    <p>@response</p>
+</div>
+
+<style>
+    .chat-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 10px;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #chatInput {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+    }
+
+    #sendButton {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+
+@code {
+    private string? userInput;
+
+    private string? response;
+
+
+
+    private async Task SendQuestion()
+    {
+        if (!string.IsNullOrEmpty(userInput))
+        {
+            var request = new { Prompt = userInput };
+            var responseMessage = await Http.PostAsJsonAsync("https://localhost:7222/api/OpenAI", request);
+            if (responseMessage.IsSuccessStatusCode)
+            {
+                var responseData = await responseMessage.Content.ReadFromJsonAsync<ResponseData>();
+                response = responseData?.response ?? "No response from AI.";
+            }
+
+            else
+
+            {
+
+                response = "Error: Unable to get response from AI.";
+
+            }
+
+        }
+
+    }
+
+
+
+    private class ResponseData
+
+    {
+
+        public string? response { get; set; }
+
+    }
+}

@@ -110,9 +110,9 @@ else
                         </tr>
                         @foreach (XNK_XuatKhoRawData ct in lstCTPX)
                         {
+                            var productName = sanPhamList.FirstOrDefault(p => p.AutoId == ct.SanPhamId)?.TenSanPham;
                             <tr>
-                                @* <th>@(GetProductNameAsync(@ct.SanPhamId))</th> *@
-                                <th>@ct.SanPhamId</th>
+                                <th>@productName</th>
                                 <th>@ct.SlXuat</th>
                                 <th>@ct.DonGiaXuat</th>
                                 <th>@(ct.SlXuat * ct.DonGiaXuat)</th>
@@ -188,6 +188,9 @@ else
             </div>
             <div class="modal-body">
                 <div class="form-group">
+                    <p style="color:red;">Quy chuẩn nhập: Đơn giá = 40 => 40000 VND, Số Kg = 500 => 500kg</p>
+                </div>
+                <div class="form-group">
                     <InputSelect class="form-control" @bind-Value="@newChiTiet.SanPhamId">
                         <option value="">-- Chọn sản phẩm --</option>
                         @foreach (var item in sanPhamList)
@@ -198,7 +201,7 @@ else
                 </div>
                 <div class="form-group">
                     <label for="SoLuong">Số lượng xuất:</label>
-                    <InputNumber class="form-control" @bind-Value="newChiTiet.SlXuat" />
+                    <InputNumber class="form-control" @bind-Value="newChiTiet.SlXuat" step="1" />
                 </div>
                 <div class="form-group">
                     <label for="DonGia">Đơn giá:</label>
@@ -308,10 +311,11 @@ else
             Navigation.NavigateTo("/Error");
         }
     }
-    
+
 
     private void OpenAddModal()
     {
+        lstCTPX.Clear();
         phieuXuat = new XNK_XuatKho();
         addModalClass = "show";
         addModalDisplayStyle = "display:block";
@@ -365,6 +369,16 @@ else
 
     private void AddChiTiet()
     {
+        if (newChiTiet.SlXuat <= 0 || newChiTiet.DonGiaXuat <= 0)
+        {
+            ToastService.ShowError("Số lượng xuất và đơn giá phải lớn hơn 0");
+            return;
+        }
+        if (newChiTiet.SlXuat % 1 != 0)
+        {
+            ToastService.ShowError("Vui lòng nhập số lượng hợp lệ");
+            return;
+        }
         lstCTPX.Add(newChiTiet);
         CloseAddChiTietModal();
     }
@@ -377,26 +391,30 @@ else
 
     private async Task createPhieuXuat()
     {
-        isFraud = mlMachine.Predict(new XuatKhoData
-            {
-                SlXuat = (float)newChiTiet.SlXuat,
-                DonGiaXuat = (float)newChiTiet.DonGiaXuat,
-                NgayXuatKho = phieuXuat.NgayXuatKho.HasValue ? (float)(phieuXuat.NgayXuatKho.Value - new DateTime(1970, 1, 1)).TotalDays : 0
-            });
-
-        if (isFraud)
+        foreach (var chiTiet in lstCTPX)
         {
-            isFraud = false;
-            doituong.TenDangNhap = user.TenDangNhap;
-            doituong.ThongTin = "Phát hiện gian lận trong việc tạo phiếu" + phieuXuat.SoPhieuXuat;
-            doituong.lenh = "SELECT";
-            doituong.NgayThucHien = DateTime.Now;
-            doituong.TrangThai = user.TrangThai;
-            await theoDoi_Service.AddTheoDoi(doituong);
+            isFraud = mlMachine.Predict(new XuatKhoData
+                {
+                    SlXuat = (float)chiTiet.SlXuat,
+                    DonGiaXuat = (float)chiTiet.DonGiaXuat,
+                    NgayXuatKho = phieuXuat.NgayXuatKho.HasValue ? (float)(phieuXuat.NgayXuatKho.Value - new DateTime(1970, 1, 1)).TotalDays : 0
+                });
 
-            ToastService.ShowError("Phát hiện gian lận!");
-            return;
+            if (isFraud)
+            {
+                isFraud = false;
+                doituong.TenDangNhap = user.TenDangNhap;
+                doituong.ThongTin = "Phát hiện gian lận trong việc tạo phiếu " + phieuXuat.SoPhieuXuat;
+                doituong.lenh = "INSERT";
+                doituong.NgayThucHien = DateTime.Now;
+                doituong.TrangThai = user.TrangThai;
+                await theoDoi_Service.AddTheoDoi(doituong);
+
+                ToastService.ShowError("Phát hiện gian lận!");
+                return;
+            }
         }
+
         try
         {
             if (await phieuXuat_Service.IsSoPhieuXuatExists(phieuXuat.SoPhieuXuat, "SQLDEVELOPER"))
@@ -415,7 +433,9 @@ else
                 dataList = await phieuXuat_Service.GetPhieuXuat();
                 CloseAddModal();
             }
-        }catch(Exception e){
+        }
+        catch (Exception e)
+        {
             Console.WriteLine(e.Message);
             ToastService.ShowError("Tạo phiếu xuất thất bại");
         }
@@ -423,26 +443,6 @@ else
 
     private async Task updatePhieuXuat()
     {
-        isFraud = mlMachine.Predict(new XuatKhoData
-            {
-                SlXuat = (float)newChiTiet.SlXuat,
-                DonGiaXuat = (float)newChiTiet.DonGiaXuat,
-                NgayXuatKho = phieuXuat.NgayXuatKho.HasValue ? (float)(phieuXuat.NgayXuatKho.Value - new DateTime(1970, 1, 1)).TotalDays : 0
-            });
-        if (isFraud)
-        {
-            isFraud = false;
-            doituong.TenDangNhap = user.TenDangNhap;
-            doituong.ThongTin = "Phát hiện gian lận thay đổi thông tin phiếu xuất" + phieuXuat.SoPhieuXuat;
-            doituong.lenh = "UPDATE";
-            doituong.NgayThucHien = DateTime.Now;
-            doituong.TrangThai = user.TrangThai;
-            await theoDoi_Service.AddTheoDoi(doituong);
-
-            ToastService.ShowError("Phát hiện gian lận!");
-            return;
-        }
-
         var result = await phieuXuat_Service.UpdatePhieuXuat(phieuXuat);
         if (result)
         {
@@ -503,11 +503,6 @@ else
     private void ExportReport(string Auto_ID)
     {
         Navigation.NavigateTo($"/reportxuatkho/{Auto_ID}");
-    }
-
-    private async Task<string> GetProductNameAsync(int sanPhamId)
-    {
-        return await sanPham_Service.GetProductName2Async(sanPhamId);
     }
 
 

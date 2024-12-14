@@ -1,4 +1,5 @@
 using Telerik.Reporting.Cache.File;
+using Microsoft.Extensions.Hosting;
 using Telerik.Reporting.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -13,10 +14,11 @@ using Blazored.SessionStorage;
 
 
 
-
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages().AddNewtonsoftJson();
 builder.Services.AddControllers();
+builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 builder.Services.AddMvc();
 builder.Services.TryAddSingleton<IReportServiceConfiguration>(sp => new ReportServiceConfiguration
 {
@@ -27,10 +29,17 @@ builder.Services.TryAddSingleton<IReportServiceConfiguration>(sp => new ReportSe
 		System.IO.Path.Combine(GetReportsDir(sp)))
 });
 
+builder.Services.AddHttpClient("Default", client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["BaseAddress"] ?? "https://localhost:7222/");
+});
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddHttpClient();
+builder.Services.AddHttpClient<OpenAI_Service>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -49,12 +58,13 @@ builder.Services.AddScoped<QLNguoiDung_Service>();
 builder.Services.AddScoped<TheoDoi_Service>();
 builder.Services.AddScoped<QLNguoiDungNhomNguoiDung_Service>();
 builder.Services.AddScoped<QlNguoiDung>();
+builder.Services.AddScoped<OpenAI_Service>();
 builder.Services.AddScoped<TonKho_Service>(provider => new TonKho_Service("Data Source=KIETBANHTRAI\\SQLEXPRESS;Initial Catalog=QL_Kho;Integrated Security=True;"));
-
 
 builder.Services.AddBlazoredToast();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddBlazoredSessionStorage();
+
 
 var app = builder.Build();
 
@@ -63,8 +73,7 @@ app.UseAntiforgery();
 app.UseAntiforgery();
 app.UseEndpoints(endpoints =>
 {
-	endpoints.MapControllers();
-	// ... 
+    endpoints.MapControllers();
 });
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -36,6 +36,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
     <PackageReference Include="Microsoft.ML" Version="4.0.0" />
     <PackageReference Include="Microsoft.ML.FastTree" Version="4.0.0" />
     <PackageReference Include="Telerik.Reporting.OpenXmlRendering" Version="18.0.24.305" />
@@ -45,7 +46,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Components\AI_UI\" />
     <Folder Include="wwwroot\CSVData\" />
   </ItemGroup>
 

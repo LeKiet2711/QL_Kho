@@ -4,6 +4,9 @@
 @inject PhieuXuat_Service phieuXuat_Service
 @inject IToastService ToastService
 @inject NavigationManager Navigation
+@inject QlNguoiDung user
+@inject QLNguoiDung_Service user_service
+@inject TheoDoi_Service theoDoi_Service
 
 <style>
     .modal {
@@ -124,16 +127,30 @@ else
     public List<XNK_XuatKhoRawData> dataList = new List<XNK_XuatKhoRawData>();
     private XNK_XuatKhoRawData chitietPhieuXuat = new XNK_XuatKhoRawData();
     private List<DanhMucSanPham> sanPhamList = new List<DanhMucSanPham>();
+    private TheoDoi doituong = new TheoDoi();
+    private ML_Machine mlMachine = new ML_Machine();
+
 
     private string addModalClass = "";
     private string addModalDisplayStyle = "display:none";
     private string deleteModalClass = "";
     private string deleteModalDisplayStyle = "display:none";
+    bool isFraud = false;
+    private string SoPhieuXuat = "";
 
     protected override async Task OnInitializedAsync()
     {
-        dataList = await chitietPhieuXuat_Service.GetChiTietByPhieuXuat(ID);
-        sanPhamList = await phieuXuat_Service.GetDanhMucSanPham();
+        try
+        {
+            user.TenDangNhap = await user_service.GetCurrentTenDangNhap();
+            dataList = await chitietPhieuXuat_Service.GetChiTietByPhieuXuat(ID);
+            sanPhamList = await phieuXuat_Service.GetDanhMucSanPham();
+
+            mlMachine.TrainModel();
+        }catch (Exception e)
+        {
+            ToastService.ShowError("Có lỗi xảy ra!");
+        }   
     }
 
     private void OpenAddModal()
@@ -170,6 +187,27 @@ else
 
     protected async Task createChiTietPhieuXuat()
     {
+        isFraud = mlMachine.Predict(new XuatKhoData
+            {
+                SlXuat = (float)chitietPhieuXuat.SlXuat,
+                DonGiaXuat = (float)chitietPhieuXuat.DonGiaXuat,
+            });
+
+        if (isFraud)
+        {
+            isFraud = false;
+            SoPhieuXuat=await chitietPhieuXuat_Service.GetSoPhieuXuatByChiTietId(ID);
+            doituong.TenDangNhap = user.TenDangNhap;
+            doituong.ThongTin = "Phát hiện thao tác thêm hàng bất thường trong " + SoPhieuXuat;
+            doituong.lenh = "INSERT";
+            doituong.NgayThucHien = DateTime.Now;
+            doituong.TrangThai = user.TrangThai;
+            await theoDoi_Service.AddTheoDoi(doituong);
+
+            ToastService.ShowError("Phát hiện gian lận!");
+            return;
+        }
+
         try
         {
             chitietPhieuXuat.XuatKhoId = ID;

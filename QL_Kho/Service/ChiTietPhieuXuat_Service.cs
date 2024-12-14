@@ -70,6 +70,16 @@ namespace QL_Kho.Service
             return (double)chitietPhieuXuats;
         }
 
+        public async Task<string> GetSoPhieuXuatByChiTietId(int chiTietId)
+        {
+            var result = await (from ctpx in _dbconnect.XNK_XuatKhoRawData
+                                join px in _dbconnect.XNK_XuatKho on ctpx.XuatKhoId equals px.AutoId
+                                where ctpx.AutoId == chiTietId && ctpx.IsDeleted == false && px.IsDeleted == false
+                                select px.SoPhieuXuat).FirstOrDefaultAsync();
+
+            return result;
+        }
+
         public async Task<List<XuatKhoData>> GetTrainingData()
         {
             return await (from ctpx in _dbconnect.XNK_XuatKhoRawData

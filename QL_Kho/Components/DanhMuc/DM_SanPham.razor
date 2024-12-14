@@ -244,6 +244,8 @@ else
                     return;
                 }
             }
+            dvtList = await sanPham_Service.GetDanhMucDonViTinh();
+            lspList= await sanPham_Service.GetDanhMucLSP();
             dataList = await sanPham_Service.GetDanhMucSanPham();
         }
         catch (Exception e)

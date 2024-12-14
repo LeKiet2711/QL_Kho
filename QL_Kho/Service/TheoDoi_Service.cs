@@ -14,6 +14,7 @@ namespace QL_Kho.Service
 
         public async Task<bool> AddTheoDoi(TheoDoi doituong)
         {
+            doituong.AutoId = 0;
             await _dbconnect.TheoDois.AddAsync(doituong);
             await _dbconnect.SaveChangesAsync();
             return true;
