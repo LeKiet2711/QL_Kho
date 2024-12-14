@@ -7,6 +7,7 @@
 @inject NavigationManager Navigation
 @inject QlNguoiDung user
 @inject QLNguoiDung_Service user_service
+@inject QLNguoiDungNhomNguoiDung_Service nguoiDungNhomNguoiDung_service
 
 
 <h2 style="text-align:center;font-weight:bold">Phiếu nhập kho</h2>
@@ -26,8 +27,17 @@ else
             <GridColumn Field="Ncc.TenNcc" Title="Nhà cung cấp" Width="100px" />
             <GridColumn Field="Kho.TenKho" Title="Kho" Width="100px" />
             <GridColumn Field="@nameof(XNK_NhapKho.NgayNhapKho)" Title="Ngày nhập kho" Width="100px" />
+            <GridColumn Title="Trạng thái" Width="150px">
+                <Template>
+                    @{
+                        var phieuNhap = (XNK_NhapKho)context;
+                        string buttonClass = phieuNhap.TrangThai == 1 ? "btn btn-success" : "btn btn-warning";
+                        string buttonText = phieuNhap.TrangThai == 1 ? "Đã xử lý" : "Chưa được xử lý";
+                    }
+                    <button class="@buttonClass" disabled style="cursor: not-allowed; opacity: 0.65;">@buttonText</button>
+                </Template>
+            </GridColumn>
             <GridColumn Field="@nameof(XNK_NhapKho.GhiChu)" Title="Ghi chú" Width="100px" />
-
             <GridCommandColumn Width="180px">
                 <GridCommandButton Command="Edit" OnClick="@EditItem">
                     <span class="oi oi-pencil" Width="100px"></span> Sửa
@@ -284,7 +294,6 @@ else
     private List<DanhMucNCC> nccList = new List<DanhMucNCC>();
     private List<DanhMucKho> khoList = new List<DanhMucKho>();
     private List<DanhMucSanPham> sanPhamList = new List<DanhMucSanPham>();
-
     private XNK_NhapKhoRawData newChiTiet = new XNK_NhapKhoRawData();
 
     private string addModalClass = "";
@@ -297,16 +306,19 @@ else
     private string addChiTietModalDisplayStyle = "display:none";
 
     private string soPhieuNhap;
+    private int userRole;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             user.TenDangNhap = await user_service.GetCurrentTenDangNhap();
+
             if (user.TenDangNhap != "admin")
             {
-                var userRole = await user_service.GetUserRole(user.TenDangNhap);
-                if (userRole != "1")
+                userRole = await nguoiDungNhomNguoiDung_service.GetUserRole(user.TenDangNhap, "PN");
+
+                if (userRole == 0)
                 {
                     Navigation.NavigateTo("/Error");
                     return;
@@ -321,7 +333,6 @@ else
         {
             Navigation.NavigateTo("/Error");
         }
-        
     }
 
     private void OpenAddModal()
@@ -451,12 +462,22 @@ else
 
     private void EditItem(GridCommandEventArgs args)
     {
+        if (phieuNhap.TrangThai == 1)
+        {
+            ToastService.ShowError("Không thể sửa phiếu nhập đã xử lý! Vui lòng liên hệ admin để biết thêm");
+            return;
+        }
         var phieuNhapToEdit = (XNK_NhapKho)args.Item;
         OpenEditModal(phieuNhapToEdit);
     }
 
     private void DeleteItem(GridCommandEventArgs args)
     {
+        if (phieuNhap.TrangThai == 1)
+        {
+            ToastService.ShowError("Không thể xóa phiếu nhập đã xử lý! Vui lòng liên hệ admin để biết thêm");
+            return;
+        }
         var phieuNhapToDelete = (XNK_NhapKho)args.Item;
         OpenDeleteModal(phieuNhapToDelete);
     }

@@ -24,4 +24,7 @@ public partial class QlNguoiDung
 
     [Column("isDeleted")]
     public bool? IsDeleted { get; set; }
+
+    [InverseProperty("TenDangNhapNavigation")]
+    public virtual ICollection<TheoDoi> TheoDois { get; set; } = new List<TheoDoi>();
 }

@@ -5,6 +5,7 @@
 @inject IToastService ToastService
 @inject QlNguoiDung user
 @inject QLNguoiDung_Service user_service
+@inject QLNguoiDungNhomNguoiDung_Service nguoiDungNhomNguoiDung_service
 @inject NavigationManager Navigation
 
 <h2 style="text-align:center;font-weight:bold">Danh mục đơn vị tính</h2>
@@ -162,16 +163,19 @@ else
 
     private string maDonVi;
     private string tenDonVi;
+    private int userRole;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             user.TenDangNhap = await user_service.GetCurrentTenDangNhap();
+
             if (user.TenDangNhap != "admin")
             {
-                var userRole = await user_service.GetUserRole(user.TenDangNhap);
-                if (userRole != "1" && userRole != "2")
+                userRole = await nguoiDungNhomNguoiDung_service.GetUserRole(user.TenDangNhap, "DVT");
+
+                if (userRole == 0)
                 {
                     Navigation.NavigateTo("/Error");
                     return;

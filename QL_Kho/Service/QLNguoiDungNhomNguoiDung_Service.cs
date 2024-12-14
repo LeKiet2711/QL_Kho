@@ -35,10 +35,25 @@ namespace QL_Kho.Service
                 await _context.SaveChangesAsync();
             }
         }
+
         public async Task<List<QlNguoiDungNhomNguoiDung>> GetAllAssignedUsers()
         {
             return await _context.QlNguoiDungNhomNguoiDungs.ToListAsync();
         }
 
+        public async Task<int> GetUserRole(string tenDangNhap,string MaMH)
+        {
+            var userGroup = await _context.QlNguoiDungNhomNguoiDungs
+                .FirstOrDefaultAsync(n => n.TenDangNhap == tenDangNhap && n.IsDeleted==false);
+            if (userGroup == null)
+            {
+                return 0; // User chưa có role
+            }
+
+            var hasAccess = await _context.QlPhanQuyens
+                .AnyAsync(p => p.MaNhomNguoiDung == userGroup.MaNhomNguoiDung && p.MaManHinh == MaMH && p.CoQuyen == 1);
+
+            return hasAccess ? 1 : 0;
+        }
     }
 }

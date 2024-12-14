@@ -45,6 +45,7 @@ builder.Services.AddScoped<PhieuXuat_Service>();
 builder.Services.AddScoped<ChiTietPhieuNhap_Service>();
 builder.Services.AddScoped<ChiTietPhieuXuat_Service>();
 builder.Services.AddScoped<QLNguoiDung_Service>();
+builder.Services.AddScoped<TheoDoi_Service>();
 builder.Services.AddScoped<QLNguoiDungNhomNguoiDung_Service>();
 builder.Services.AddScoped<QlNguoiDung>();
 builder.Services.AddScoped<TonKho_Service>(provider => new TonKho_Service("Data Source=KIETBANHTRAI\\SQLEXPRESS;Initial Catalog=QL_Kho;Integrated Security=True;"));

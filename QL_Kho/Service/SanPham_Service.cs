@@ -98,10 +98,11 @@ namespace QL_Kho.Service
             return product.TenSanPham;
         }
 
-        public string GetProductName2(int sanPhamId)
+        public async Task<string> GetProductName2Async(int sanPhamId)
         {
-            var product = _dbconnect.DanhMucSanPham.FirstOrDefault(p => p.AutoId == sanPhamId);
-            return product.TenSanPham;
+            var product = await _dbconnect.DanhMucSanPham.FirstOrDefaultAsync(p => p.AutoId == sanPhamId);
+            return product?.TenSanPham;
         }
+
     }
 }

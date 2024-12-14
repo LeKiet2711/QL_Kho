@@ -7,6 +7,8 @@
 @inject NavigationManager Navigation
 @inject QlNguoiDung user
 @inject QLNguoiDung_Service user_service
+@inject TheoDoi_Service theoDoi_Service
+@inject QLNguoiDungNhomNguoiDung_Service nguoiDungNhomNguoiDung_service
 
 <h2 style="text-align:center;font-weight:bold">Phiếu xuất kho</h2>
 <button class="btn btn-success" @onclick="OpenAddModal" style="margin-bottom:10px">
@@ -24,8 +26,17 @@ else
             <GridColumn Field="@nameof(XNK_XuatKho.SoPhieuXuat)" Title="Số phiếu xuất" Width="100px" />
             <GridColumn Field="Kho.TenKho" Title="Kho" Width="100px" />
             <GridColumn Field="@nameof(XNK_XuatKho.NgayXuatKho)" Title="Ngày xuất kho" Width="100px" />
+            <GridColumn Title="Trạng thái" Width="150px">
+                <Template>
+                    @{
+                        var phieuXuat = (XNK_XuatKho)context;
+                        string buttonClass = phieuXuat.TrangThai == 1 ? "btn btn-success" : "btn btn-warning";
+                        string buttonText = phieuXuat.TrangThai == 1 ? "Đã xử lý" : "Chưa được xử lý";
+                    }
+                    <button class="@buttonClass" disabled style="cursor: not-allowed; opacity: 0.65;">@buttonText</button>
+                </Template>
+            </GridColumn>
             <GridColumn Field="@nameof(XNK_XuatKho.GhiChu)" Title="Ghi chú" Width="100px" />
-
             <GridCommandColumn Width="180px">
                 <GridCommandButton Command="Edit" OnClick="@EditItem">
                     <span class="oi oi-pencil" Width="100px"></span> Sửa
@@ -100,7 +111,8 @@ else
                         @foreach (XNK_XuatKhoRawData ct in lstCTPX)
                         {
                             <tr>
-                                <th>@(GetProductName(@ct.SanPhamId))</th>
+                                @* <th>@(GetProductNameAsync(@ct.SanPhamId))</th> *@
+                                <th>@ct.SanPhamId</th>
                                 <th>@ct.SlXuat</th>
                                 <th>@ct.DonGiaXuat</th>
                                 <th>@(ct.SlXuat * ct.DonGiaXuat)</th>
@@ -252,7 +264,10 @@ else
     private List<DanhMucSanPham> sanPhamList = new List<DanhMucSanPham>();
     private XNK_XuatKhoRawData newChiTiet = new XNK_XuatKhoRawData();
 
+    private TheoDoi doituong = new TheoDoi();
     private ML_Machine mlMachine = new ML_Machine();
+    bool isFraud = false;
+    private int userRole;
 
     private string addModalClass = "";
     private string addModalDisplayStyle = "display:none";
@@ -268,10 +283,12 @@ else
         try
         {
             user.TenDangNhap = await user_service.GetCurrentTenDangNhap();
+
             if (user.TenDangNhap != "admin")
             {
-                var userRole = await user_service.GetUserRole(user.TenDangNhap);
-                if (userRole != "1")
+                userRole = await nguoiDungNhomNguoiDung_service.GetUserRole(user.TenDangNhap, "PX");
+
+                if (userRole == 0)
                 {
                     Navigation.NavigateTo("/Error");
                     return;
@@ -290,8 +307,8 @@ else
         {
             Navigation.NavigateTo("/Error");
         }
-
     }
+    
 
     private void OpenAddModal()
     {
@@ -360,14 +377,23 @@ else
 
     private async Task createPhieuXuat()
     {
-        bool isFraud = mlMachine.Predict(new XuatKhoData
+        isFraud = mlMachine.Predict(new XuatKhoData
             {
                 SlXuat = (float)newChiTiet.SlXuat,
                 DonGiaXuat = (float)newChiTiet.DonGiaXuat,
                 NgayXuatKho = phieuXuat.NgayXuatKho.HasValue ? (float)(phieuXuat.NgayXuatKho.Value - new DateTime(1970, 1, 1)).TotalDays : 0
             });
+
         if (isFraud)
         {
+            isFraud = false;
+            doituong.TenDangNhap = user.TenDangNhap;
+            doituong.ThongTin = "Phát hiện gian lận trong việc tạo phiếu" + phieuXuat.SoPhieuXuat;
+            doituong.lenh = "SELECT";
+            doituong.NgayThucHien = DateTime.Now;
+            doituong.TrangThai = user.TrangThai;
+            await theoDoi_Service.AddTheoDoi(doituong);
+
             ToastService.ShowError("Phát hiện gian lận!");
             return;
         }
@@ -393,11 +419,30 @@ else
             Console.WriteLine(e.Message);
             ToastService.ShowError("Tạo phiếu xuất thất bại");
         }
-
     }
 
     private async Task updatePhieuXuat()
     {
+        isFraud = mlMachine.Predict(new XuatKhoData
+            {
+                SlXuat = (float)newChiTiet.SlXuat,
+                DonGiaXuat = (float)newChiTiet.DonGiaXuat,
+                NgayXuatKho = phieuXuat.NgayXuatKho.HasValue ? (float)(phieuXuat.NgayXuatKho.Value - new DateTime(1970, 1, 1)).TotalDays : 0
+            });
+        if (isFraud)
+        {
+            isFraud = false;
+            doituong.TenDangNhap = user.TenDangNhap;
+            doituong.ThongTin = "Phát hiện gian lận thay đổi thông tin phiếu xuất" + phieuXuat.SoPhieuXuat;
+            doituong.lenh = "UPDATE";
+            doituong.NgayThucHien = DateTime.Now;
+            doituong.TrangThai = user.TrangThai;
+            await theoDoi_Service.AddTheoDoi(doituong);
+
+            ToastService.ShowError("Phát hiện gian lận!");
+            return;
+        }
+
         var result = await phieuXuat_Service.UpdatePhieuXuat(phieuXuat);
         if (result)
         {
@@ -430,12 +475,22 @@ else
 
     private void EditItem(GridCommandEventArgs args)
     {
+        if(phieuXuat.TrangThai==1)
+        {
+            ToastService.ShowError("Không thể sửa phiếu xuất đã xử lý! Vui lòng liên hệ admin để biết thêm");
+            return;
+        }
         var phieuXuatToEdit = (XNK_XuatKho)args.Item;
         OpenEditModal(phieuXuatToEdit);
     }
 
     private void DeleteItem(GridCommandEventArgs args)
     {
+        if (phieuXuat.TrangThai == 1)
+        {
+            ToastService.ShowError("Không thể xóa phiếu xuất đã xử lý! Vui lòng liên hệ admin để biết thêm");
+            return;
+        }
         var phieuXuatToDelete = (XNK_XuatKho)args.Item;
         OpenDeleteModal(phieuXuatToDelete);
     }
@@ -450,9 +505,10 @@ else
         Navigation.NavigateTo($"/reportxuatkho/{Auto_ID}");
     }
 
-    private string GetProductName(int sanPhamId)
+    private async Task<string> GetProductNameAsync(int sanPhamId)
     {
-        return sanPham_Service.GetProductName2(sanPhamId);
+        return await sanPham_Service.GetProductName2Async(sanPhamId);
     }
+
 
 }

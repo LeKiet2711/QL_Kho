@@ -45,10 +45,12 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<XNK_XuatKhoRawData> XNK_XuatKhoRawData { get; set; }
 
+    public virtual DbSet<TheoDoi> TheoDois { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        //=> optionsBuilder.UseSqlServer("Server=KIETBANHTRAI\\SQLEXPRESS;Database=QL_Kho;User Id=sa;Password=123;Trust Server Certificate=True;");
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-QBTN8I9\\SQLEXPRESS;Database=QL_Kho;User Id=sa;Password=123;Trust Server Certificate=True;");
+        => optionsBuilder.UseSqlServer("Server=KIETBANHTRAI\\SQLEXPRESS;Database=QL_Kho;User Id=sa;Password=123;Trust Server Certificate=True;");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<DmManHinh>(entity =>
@@ -167,6 +169,16 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.SanPham).WithMany(p => p.TblXnkXuatKhoRawData).HasConstraintName("FK__tbl_XNK_X__San_P__571DF1D5");
 
             entity.HasOne(d => d.XuatKho).WithMany(p => p.TblXnkXuatKhoRawData).HasConstraintName("FK__tbl_XNK_X__Xuat___5629CD9C");
+        });
+
+        modelBuilder.Entity<TheoDoi>(entity =>
+        {
+            entity.HasKey(e => e.AutoId).HasName("PK__TheoDoi__F82B8823DAAE3172");
+
+            entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+            entity.Property(e => e.ThongTin).HasDefaultValue(0);
+
+            entity.HasOne(d => d.TenDangNhapNavigation).WithMany(p => p.TheoDois).HasConstraintName("FK__TheoDoi__isDelet__3E1D39E1");
         });
 
         OnModelCreatingPartial(modelBuilder);
