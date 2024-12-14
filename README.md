@@ -265,7 +265,11 @@ This section should list any major frameworks/libraries used to bootstrap your p
     <td>Lộc</td>
   </tr>
 </table>
-<h2 id="ai">Ứng dụng AI - Chatbot AI</h2>
-<p><b>Chat bot cung cấp thông tin liên hệ, thông tin về phần mềm kho, cách sử công cụ.</b></p>
-
+<h2 id="ai">Ứng dụng AI - thuật toán FastTree</h2>
+<p><b>Chương trình sử dụng thuật toán FastTree từ thư viện ML.NET để thực hiện phân loại nhị phân.</b></p>
+<p>Mục đích: Xây dựng mô hình phân loại nhị phân để phát hiện gian lận trong dữ liệu xuất kho.</p>
+<p>Luồng hoạt động:</p>
+<p>+ Đọc dữ liệu huấn luyện từ file.</p>
+<p>+ Huấn luyện mô hình bằng cách sử dụng pipeline với thuật toán FastTree.</p>
+<p>+ Dự đoán kết quả gian lận cho dữ liệu mới.</p>
 
