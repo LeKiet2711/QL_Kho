@@ -101,7 +101,7 @@ This section should list any major frameworks/libraries used to bootstrap your p
 <table align="center">
   <tr>
     <th>STT</th>
-    <th>Chức Năng (WINFORM)</th>
+    <th>Chức Năng (WEB)</th>
     <th></th>
   </tr
   <tr>
