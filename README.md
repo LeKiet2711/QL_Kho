@@ -265,6 +265,13 @@ This section should list any major frameworks/libraries used to bootstrap your p
     <td>Lộc</td>
   </tr>
 </table>
+
+<h2 id="ai">Chức năng nổi bật</h2>
+
+<p><b>Xuất phiếu nhập / xuất gửi về Email người dùng có mã hóa bảo mật</b></p>
+
+<p><b>Xuất báo cáo từng kỳ</b></p>
+<hr/>
 <h2 id="ai">Ứng dụng AI - thuật toán FastTree</h2>
 <p><b>Chương trình sử dụng thuật toán FastTree từ thư viện ML.NET để thực hiện phân loại nhị phân.</b></p>
 <p>Mục đích: Xây dựng mô hình phân loại nhị phân để phát hiện gian lận trong dữ liệu xuất kho.</p>
